@@ -1,1 +1,435 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080d1c"><title>Dashboard — Enlazo</title><link rel="stylesheet" href="assets/style.css"></head><body><div class="ambient ambient-one"></div><header class="nav-wrap"><nav class="nav container"><a class="brand" href="index.html"><span class="brand-mark">E</span><span>ENLAZO</span></a><button class="mobile-menu" aria-label="Toggle navigation">☰</button><div class="nav-links"><a href="index.html#features">Features</a><a href="commands.html">Commands</a><a class="active" href="dashboard.html">Dashboard</a></div><div class="nav-actions"><a class="button button-small button-primary" href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&scope=bot%20applications.commands" target="_blank" rel="noreferrer">Add to Discord ↗</a></div></nav></header><main class="container page-main"><div class="eyebrow">ENLAZO CONTROL CENTER</div><h1>Your server.<br><span class="gradient-text">Your settings.</span></h1><p class="page-lead">A home for your Enlazo experience. Connect with Discord to get started; server management features will become available when secure Discord sign-in and a backend are configured.</p><div class="dashboard-layout"><aside class="dash-side"><div class="dash-user"><div class="bot-avatar small-avatar">E</div><div><b>Enlazo Dashboard</b><small>Community tools</small></div></div><div class="dash-nav active">▦ Overview</div><div class="dash-nav muted">⚙ Server settings <span>Coming soon</span></div><div class="dash-nav muted">♙ Member progress <span>Coming soon</span></div><div class="dash-nav muted">✧ Seasonal events <span>Coming soon</span></div></aside><section class="dash-content"><div class="dash-welcome"><div><div class="muted">WELCOME TO YOUR CONTROL CENTER</div><h2>Let’s get your community connected.</h2><p>Sign-in and live server controls are not connected in this prototype.</p></div><span class="status-pill status-demo">PREVIEW</span></div><div class="dash-metrics"><div class="metric-card"><span>Connected servers</span><strong>—</strong><small>Requires Discord OAuth</small></div><div class="metric-card"><span>Active players</span><strong>—</strong><small>Live analytics not connected</small></div><div class="metric-card"><span>Commands today</span><strong>—</strong><small>Live analytics not connected</small></div></div><div class="dash-setup"><div class="setup-icon">↗</div><div><h3>Connect Enlazo to Discord</h3><p>Invite the bot to a server where you have permission to manage bots. This invite does not sign you into a dashboard or grant web settings access.</p><a class="button button-primary" href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&scope=bot%20applications.commands" target="_blank" rel="noreferrer">Invite Enlazo ↗</a></div></div><div class="notice-box"><strong>Why are settings unavailable?</strong><p>A real dashboard needs Discord OAuth2 login, a server-side API, permission checks, and secure storage. This page intentionally does not request your Discord password or pretend to control a live server.</p></div></section></div></main><footer class="footer"><div class="container footer-main"><a class="brand" href="index.html"><span class="brand-mark">E</span><span>ENLAZO</span></a><div class="footer-links"><a href="commands.html">Commands</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> Enlazo.</span><span>Independent community project.</span></div></footer><script src="assets/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d1c">
+  <meta name="description" content="Enlazo Dashboard — your home for community tools, server settings, and player progress.">
+  <title>Dashboard — Enlazo</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .language-select {
+      color: var(--text, #f4f7ff);
+      background: var(--card, #101a30);
+      border: 1px solid rgba(140, 170, 220, .25);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      max-width: 145px;
+    }
+
+    .dash-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dash-nav span {
+      font-size: .7rem;
+      opacity: .75;
+      text-align: right;
+    }
+
+    .dash-nav.disabled {
+      cursor: not-allowed;
+      opacity: .7;
+    }
+
+    .dash-welcome {
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .dash-welcome h2 {
+      margin-top: 10px;
+    }
+
+    .status-demo {
+      white-space: nowrap;
+    }
+
+    .metric-card {
+      min-width: 0;
+    }
+
+    .metric-card span,
+    .metric-card small {
+      display: block;
+    }
+
+    .metric-card strong {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    .setup-icon {
+      flex-shrink: 0;
+    }
+
+    .dashboard-note {
+      margin-top: 18px;
+    }
+
+    .dash-setup .button {
+      display: inline-flex;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .language-select {
+        max-width: 100%;
+      }
+
+      .dash-welcome {
+        flex-direction: column;
+      }
+
+      .status-demo {
+        white-space: normal;
+      }
+
+      .dash-nav {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+
+  <header class="nav-wrap">
+    <nav class="nav container">
+      <a class="brand" href="index.html" aria-label="Enlazo home">
+        <span class="brand-mark">E</span>
+        <span>ENLAZO</span>
+      </a>
+
+      <button class="mobile-menu" type="button"
+              aria-label="Toggle navigation" aria-expanded="false">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html#features" data-i18n="features">Features</a>
+        <a href="commands.html" data-i18n="commands">Commands</a>
+        <a class="active" href="dashboard.html" data-i18n="dashboard">Dashboard</a>
+      </div>
+
+      <div class="nav-actions">
+        <select id="languageSelect" class="language-select" aria-label="Select language">
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇲🇽 Español</option>
+          <option value="pt">🇧🇷 Português</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+
+        <a class="button button-small button-primary"
+           href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&amp;scope=bot%20applications.commands"
+           target="_blank" rel="noopener noreferrer" data-i18n="addBot">
+          Add to Discord ↗
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container page-main">
+    <div class="eyebrow" data-i18n="eyebrow">ENLAZO CONTROL CENTER</div>
+
+    <h1>
+      <span data-i18n="headline1">Your server.</span><br>
+      <span class="gradient-text" data-i18n="headline2">Your settings.</span>
+    </h1>
+
+    <p class="page-lead" data-i18n="lead">
+      A home for your Enlazo experience. Server management will become available when secure sign-in and a backend are configured.
+    </p>
+
+    <div class="dashboard-layout">
+      <aside class="dash-side">
+        <div class="dash-user">
+          <div class="bot-avatar small-avatar">E</div>
+          <div>
+            <b>Enlazo Dashboard</b>
+            <small data-i18n="communityTools">Community tools</small>
+          </div>
+        </div>
+
+        <div class="dash-nav active">
+          <span data-i18n="overview">▦ Overview</span>
+        </div>
+
+        <div class="dash-nav disabled muted" aria-disabled="true">
+          <span data-i18n="serverSettings">⚙ Server settings</span>
+          <span data-i18n="comingSoon">Coming soon</span>
+        </div>
+
+        <div class="dash-nav disabled muted" aria-disabled="true">
+          <span data-i18n="memberProgress">♙ Member progress</span>
+          <span data-i18n="comingSoon">Coming soon</span>
+        </div>
+
+        <div class="dash-nav disabled muted" aria-disabled="true">
+          <span data-i18n="seasonalEvents">✧ Seasonal events</span>
+          <span data-i18n="comingSoon">Coming soon</span>
+        </div>
+      </aside>
+
+      <section class="dash-content">
+        <div class="dash-welcome">
+          <div>
+            <div class="muted" data-i18n="welcomeLabel">WELCOME TO YOUR CONTROL CENTER</div>
+            <h2 data-i18n="welcomeTitle">Let’s get your community connected.</h2>
+            <p data-i18n="welcomeDescription">
+              This dashboard preview is ready to explore. Live account and server controls have not been connected yet.
+            </p>
+          </div>
+
+          <span class="status-pill status-demo" data-i18n="preview">PREVIEW</span>
+        </div>
+
+        <div class="dash-metrics">
+          <div class="metric-card">
+            <span data-i18n="connectedServers">Connected servers</span>
+            <strong>—</strong>
+            <small data-i18n="requiresLogin">Discord sign-in not connected</small>
+          </div>
+
+          <div class="metric-card">
+            <span data-i18n="activePlayers">Active players</span>
+            <strong>—</strong>
+            <small data-i18n="analyticsUnavailable">Live analytics unavailable</small>
+          </div>
+
+          <div class="metric-card">
+            <span data-i18n="commandsToday">Commands today</span>
+            <strong>—</strong>
+            <small data-i18n="analyticsUnavailable">Live analytics unavailable</small>
+          </div>
+        </div>
+
+        <div class="dash-setup">
+          <div class="setup-icon">↗</div>
+          <div>
+            <h3 data-i18n="connectTitle">Connect Enlazo to Discord</h3>
+            <p data-i18n="connectDescription">
+              Add the bot to a Discord server where you have permission to manage bots. This action does not sign you into a dashboard or enable web-based server settings.
+            </p>
+
+            <a class="button button-primary"
+               href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&amp;scope=bot%20applications.commands"
+               target="_blank" rel="noopener noreferrer" data-i18n="invite">
+              Invite Enlazo ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="notice-box dashboard-note">
+          <strong data-i18n="noticeTitle">Why are settings unavailable?</strong>
+          <p data-i18n="noticeDescription">
+            A working dashboard needs Discord OAuth2 authentication, a server-side API, permission checks, and secure storage. This preview does not request your Discord password or claim to control a live server.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-main">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">E</span>
+        <span>ENLAZO</span>
+      </a>
+
+      <div class="footer-links">
+        <a href="commands.html" data-i18n="commands">Commands</a>
+        <a href="privacy.html" data-i18n="privacy">Privacy Policy</a>
+        <a href="terms.html" data-i18n="terms">Terms of Service</a>
+        <a href="https://github.com/derekelinasano2709-ops/EnlazoBot"
+           target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> Enlazo.</span>
+      <span data-i18n="footerNote">Independent community project.</span>
+    </div>
+  </footer>
+
+  <script src="assets/app.js"></script>
+  <script>
+    (() => {
+      const translations = {
+        en: {
+          features:"Features", commands:"Commands", dashboard:"Dashboard",
+          addBot:"Add to Discord ↗", eyebrow:"ENLAZO CONTROL CENTER",
+          headline1:"Your server.", headline2:"Your settings.",
+          lead:"A home for your Enlazo experience. Server management will become available when secure sign-in and a backend are configured.",
+          communityTools:"Community tools", overview:"▦ Overview",
+          serverSettings:"⚙ Server settings", memberProgress:"♙ Member progress",
+          seasonalEvents:"✧ Seasonal events", comingSoon:"Coming soon",
+          welcomeLabel:"WELCOME TO YOUR CONTROL CENTER",
+          welcomeTitle:"Let’s get your community connected.",
+          welcomeDescription:"This dashboard preview is ready to explore. Live account and server controls have not been connected yet.",
+          preview:"PREVIEW", connectedServers:"Connected servers",
+          requiresLogin:"Discord sign-in not connected",
+          activePlayers:"Active players", commandsToday:"Commands today",
+          analyticsUnavailable:"Live analytics unavailable",
+          connectTitle:"Connect Enlazo to Discord",
+          connectDescription:"Add the bot to a Discord server where you have permission to manage bots. This action does not sign you into a dashboard or enable web-based server settings.",
+          invite:"Invite Enlazo ↗", noticeTitle:"Why are settings unavailable?",
+          noticeDescription:"A working dashboard needs Discord OAuth2 authentication, a server-side API, permission checks, and secure storage. This preview does not request your Discord password or claim to control a live server.",
+          privacy:"Privacy Policy", terms:"Terms of Service",
+          footerNote:"Independent community project."
+        },
+        es: {
+          features:"Funciones", commands:"Comandos", dashboard:"Panel",
+          addBot:"Añadir a Discord ↗", eyebrow:"CENTRO DE CONTROL DE ENLAZO",
+          headline1:"Tu servidor.", headline2:"Tu configuración.",
+          lead:"Tu espacio para Enlazo. La administración del servidor estará disponible cuando se configuren el inicio de sesión seguro y un backend.",
+          communityTools:"Herramientas comunitarias", overview:"▦ Resumen",
+          serverSettings:"⚙ Ajustes del servidor", memberProgress:"♙ Progreso de miembros",
+          seasonalEvents:"✧ Eventos de temporada", comingSoon:"Próximamente",
+          welcomeLabel:"BIENVENIDO A TU CENTRO DE CONTROL",
+          welcomeTitle:"Conectemos a tu comunidad.",
+          welcomeDescription:"Esta vista previa del panel ya está disponible. La cuenta y los controles del servidor aún no están conectados.",
+          preview:"VISTA PREVIA", connectedServers:"Servidores conectados",
+          requiresLogin:"Inicio de sesión con Discord no conectado",
+          activePlayers:"Jugadores activos", commandsToday:"Comandos de hoy",
+          analyticsUnavailable:"Estadísticas en tiempo real no disponibles",
+          connectTitle:"Conecta Enlazo con Discord",
+          connectDescription:"Añade el bot a un servidor de Discord donde tengas permiso para administrar bots. Esta acción no inicia sesión en el panel ni activa la administración del servidor desde la web.",
+          invite:"Invitar a Enlazo ↗", noticeTitle:"¿Por qué no están disponibles los ajustes?",
+          noticeDescription:"Un panel funcional necesita autenticación OAuth2 de Discord, una API en el servidor, comprobaciones de permisos y almacenamiento seguro. Esta vista previa no solicita tu contraseña de Discord ni afirma controlar un servidor en tiempo real.",
+          privacy:"Política de privacidad", terms:"Términos del servicio",
+          footerNote:"Proyecto comunitario independiente."
+        },
+        pt: {
+          features:"Recursos", commands:"Comandos", dashboard:"Painel",
+          addBot:"Adicionar ao Discord ↗", eyebrow:"CENTRAL DE CONTROLE DO ENLAZO",
+          headline1:"Seu servidor.", headline2:"Suas configurações.",
+          lead:"Seu espaço para o Enlazo. O gerenciamento do servidor estará disponível quando o login seguro e um backend forem configurados.",
+          communityTools:"Ferramentas da comunidade", overview:"▦ Visão geral",
+          serverSettings:"⚙ Configurações do servidor", memberProgress:"♙ Progresso dos membros",
+          seasonalEvents:"✧ Eventos sazonais", comingSoon:"Em breve",
+          welcomeLabel:"BEM-VINDO À SUA CENTRAL DE CONTROLE",
+          welcomeTitle:"Vamos conectar sua comunidade.",
+          welcomeDescription:"Esta prévia do painel está pronta para explorar. A conta e os controles do servidor ainda não estão conectados.",
+          preview:"PRÉVIA", connectedServers:"Servidores conectados",
+          requiresLogin:"Login do Discord não conectado",
+          activePlayers:"Jogadores ativos", commandsToday:"Comandos hoje",
+          analyticsUnavailable:"Estatísticas em tempo real indisponíveis",
+          connectTitle:"Conecte o Enlazo ao Discord",
+          connectDescription:"Adicione o bot a um servidor do Discord onde você tenha permissão para gerenciar bots. Isso não inicia uma sessão no painel nem habilita configurações do servidor pela web.",
+          invite:"Convidar Enlazo ↗", noticeTitle:"Por que as configurações não estão disponíveis?",
+          noticeDescription:"Um painel funcional precisa de autenticação Discord OAuth2, uma API no servidor, verificações de permissão e armazenamento seguro. Esta prévia não solicita sua senha do Discord nem afirma controlar um servidor em tempo real.",
+          privacy:"Política de privacidade", terms:"Termos de serviço",
+          footerNote:"Projeto comunitário independente."
+        },
+        fr: {
+          features:"Fonctionnalités", commands:"Commandes", dashboard:"Tableau de bord",
+          addBot:"Ajouter à Discord ↗", eyebrow:"CENTRE DE CONTRÔLE ENLAZO",
+          headline1:"Votre serveur.", headline2:"Vos paramètres.",
+          lead:"Votre espace Enlazo. La gestion du serveur sera disponible lorsque la connexion sécurisée et un backend seront configurés.",
+          communityTools:"Outils communautaires", overview:"▦ Vue d’ensemble",
+          serverSettings:"⚙ Paramètres du serveur", memberProgress:"♙ Progression des membres",
+          seasonalEvents:"✧ Événements saisonniers", comingSoon:"Bientôt disponible",
+          welcomeLabel:"BIENVENUE DANS VOTRE CENTRE DE CONTRÔLE",
+          welcomeTitle:"Connectons votre communauté.",
+          welcomeDescription:"Cette prévisualisation du tableau de bord est disponible. Le compte et les commandes du serveur ne sont pas encore connectés.",
+          preview:"APERÇU", connectedServers:"Serveurs connectés",
+          requiresLogin:"Connexion Discord non configurée",
+          activePlayers:"Joueurs actifs", commandsToday:"Commandes aujourd’hui",
+          analyticsUnavailable:"Statistiques en direct indisponibles",
+          connectTitle:"Connecter Enlazo à Discord",
+          connectDescription:"Ajoutez le bot à un serveur Discord sur lequel vous êtes autorisé à gérer les bots. Cette action ne vous connecte pas au tableau de bord et n’active pas la gestion du serveur depuis le site.",
+          invite:"Inviter Enlazo ↗", noticeTitle:"Pourquoi les paramètres sont-ils indisponibles ?",
+          noticeDescription:"Un tableau de bord fonctionnel nécessite l’authentification Discord OAuth2, une API côté serveur, des vérifications des autorisations et un stockage sécurisé. Cet aperçu ne demande pas votre mot de passe Discord et ne prétend pas contrôler un serveur en direct.",
+          privacy:"Politique de confidentialité", terms:"Conditions d’utilisation",
+          footerNote:"Projet communautaire indépendant."
+        },
+        zh: {
+          features:"功能", commands:"命令", dashboard:"控制面板",
+          addBot:"添加到 Discord ↗", eyebrow:"ENLAZO 控制中心",
+          headline1:"你的服务器。", headline2:"你的设置。",
+          lead:"你的 Enlazo 管理空间。配置安全登录和后端服务后，才能启用服务器管理功能。",
+          communityTools:"社区工具", overview:"▦ 概览",
+          serverSettings:"⚙ 服务器设置", memberProgress:"♙ 成员进度",
+          seasonalEvents:"✧ 季节活动", comingSoon:"即将推出",
+          welcomeLabel:"欢迎来到控制中心",
+          welcomeTitle:"让我们连接你的社区。",
+          welcomeDescription:"控制面板预览已准备就绪，但账户和实时服务器控制功能尚未连接。",
+          preview:"预览版", connectedServers:"已连接的服务器",
+          requiresLogin:"尚未连接 Discord 登录",
+          activePlayers:"活跃玩家", commandsToday:"今日命令数",
+          analyticsUnavailable:"暂无法提供实时统计",
+          connectTitle:"将 Enlazo 连接到 Discord",
+          connectDescription:"将机器人添加到你有权管理机器人的 Discord 服务器。此操作不会登录控制面板，也不会启用网页服务器设置。",
+          invite:"邀请 Enlazo ↗", noticeTitle:"为什么设置暂不可用？",
+          noticeDescription:"真正可用的控制面板需要 Discord OAuth2 身份验证、服务器端 API、权限检查和安全存储。此预览不会索要你的 Discord 密码，也不会假装能够控制实时服务器。",
+          privacy:"隐私政策", terms:"服务条款",
+          footerNote:"独立社区项目。"
+        }
+      };
+
+      const languageSelect = document.getElementById("languageSelect");
+
+      function setLanguage(requestedLanguage) {
+        const language = translations[requestedLanguage] ? requestedLanguage : "en";
+        const dictionary = translations[language];
+
+        document.documentElement.lang = language;
+        document.title = dictionary.dashboard + " — Enlazo";
+        languageSelect.value = language;
+
+        languageSelect.setAttribute("aria-label", ({
+          en:"Select language",
+          es:"Seleccionar idioma",
+          pt:"Selecionar idioma",
+          fr:"Choisir la langue",
+          zh:"选择语言"
+        })[language]);
+
+        document.querySelectorAll("[data-i18n]").forEach(element => {
+          const key = element.dataset.i18n;
+          if (typeof dictionary[key] === "string") {
+            element.textContent = dictionary[key];
+          }
+        });
+      }
+
+      let savedLanguage = "en";
+
+      try {
+        savedLanguage = localStorage.getItem("enlazo_language") || "en";
+      } catch (_) {}
+
+      languageSelect.addEventListener("change", () => {
+        const language = translations[languageSelect.value]
+          ? languageSelect.value
+          : "en";
+
+        try {
+          localStorage.setItem("enlazo_language", language);
+        } catch (_) {}
+
+        setLanguage(language);
+      });
+
+      setLanguage(savedLanguage);
+
+      const year = document.getElementById("year");
+      if (year) year.textContent = new Date().getFullYear();
+
+      const menuButton = document.querySelector(".mobile-menu");
+      const navLinks = document.querySelector(".nav-links");
+
+      if (menuButton && navLinks) {
+        menuButton.addEventListener("click", () => {
+          const isOpen = navLinks.classList.toggle("open");
+          menuButton.setAttribute("aria-expanded", String(isOpen));
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
