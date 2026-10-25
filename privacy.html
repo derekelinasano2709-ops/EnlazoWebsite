@@ -1,1 +1,489 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080d1c"><title>Privacy Policy — Enlazo</title><link rel="stylesheet" href="assets/style.css"></head><body><div class="ambient ambient-one"></div><header class="nav-wrap"><nav class="nav container"><a class="brand" href="index.html"><span class="brand-mark">E</span><span>ENLAZO</span></a><button class="mobile-menu" aria-label="Toggle navigation">☰</button><div class="nav-links"><a href="index.html">Home</a><a href="commands.html">Commands</a><a href="dashboard.html">Dashboard</a></div><div class="nav-actions"><a class="button button-small button-primary" href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&scope=bot%20applications.commands">Add to Discord ↗</a></div></nav></header><main class="container legal-page"><div class="eyebrow">ENLAZO · LEGAL</div><h1>Privacy <span class="gradient-text">Policy</span></h1><p class="page-lead">Last updated: October 11, 2026</p><div class="legal-content"><div class="notice-box"><strong>Draft for project review</strong><p>This page is a starting point, not legal advice. Before public launch, confirm it matches the data the live bot actually collects, stores, shares, and deletes.</p></div><h2>1. Overview</h2><p>Enlazo is a Discord bot designed for games, community interaction, progression features, and server utilities. This policy explains the general categories of information that may be processed when you interact with the bot.</p><h2>2. Information that may be processed</h2><p>Depending on which features are enabled, Enlazo may process Discord user IDs and server IDs, command inputs, game results, XP and level progression, streaks, moderation actions requested by authorized users, and settings needed to operate features.</p><p>Do not submit passwords, payment-card details, government identifiers, or other sensitive information through bot commands.</p><h2>3. How information is used</h2><p>Information may be used to run commands, maintain game sessions, calculate scores and progression, prevent abuse, apply server settings, and troubleshoot errors. The project should collect only what is reasonably needed for these purposes.</p><h2>4. Storage and retention</h2><p>Some bot features may store data in a database so scores and settings persist between restarts. Actual retention periods, backups, and deletion procedures must be documented according to the production deployment before launch.</p><h2>5. Sharing</h2><p>Enlazo does not need your Discord password. Data may be processed by Discord and the hosting or infrastructure providers used to operate the bot. Do not claim that no data is shared unless the production setup has been audited.</p><h2>6. Your choices</h2><p>You can stop interacting with Enlazo or ask the server's administrators to remove the bot. For data access or deletion requests, contact the project maintainers through the official project repository until a dedicated contact channel is published.</p><h2>7. Children and safety</h2><p>Do not use Enlazo to post personal or sensitive information about yourself or others. Server administrators are responsible for configuring their communities and using moderation tools appropriately.</p><h2>8. Changes</h2><p>This policy may be updated as Enlazo changes. The date at the top should be updated whenever material changes are published.</p><h2>9. Contact</h2><p>For project-related privacy questions, use the <a class="text-link inline-link" href="https://github.com/derekelinasano2709-ops/EnlazoBot" target="_blank" rel="noreferrer">official EnlazoBot repository ↗</a>.</p></div></main><footer class="footer"><div class="container footer-main"><a class="brand" href="index.html"><span class="brand-mark">E</span><span>ENLAZO</span></a><div class="footer-links"><a href="terms.html">Terms of Service</a><a href="commands.html">Commands</a><a href="dashboard.html">Dashboard</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> Enlazo.</span><span>Independent community project.</span></div></footer><script src="assets/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080d1c">
+  <meta name="description" content="Read Enlazo's Privacy Policy to understand how information may be processed when using our Discord bot and website.">
+  <title>Privacy Policy — Enlazo</title>
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    .language-select {
+      appearance: none;
+      background: rgba(255,255,255,.06);
+      color: var(--text, #f5f7ff);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 10px;
+      padding: 10px 30px 10px 12px;
+      font: inherit;
+      cursor: pointer;
+      max-width: 150px;
+    }
+
+    .language-select option {
+      background: #080d1c;
+      color: #fff;
+    }
+
+    .legal-page {
+      padding-top: 65px;
+      padding-bottom: 90px;
+    }
+
+    .legal-content {
+      max-width: 850px;
+      margin: 35px auto 0;
+      line-height: 1.8;
+    }
+
+    .legal-content h2 {
+      margin-top: 34px;
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .legal-content p {
+      line-height: 1.85;
+    }
+
+    .legal-content .notice-box {
+      margin-bottom: 30px;
+    }
+
+    .legal-content a {
+      overflow-wrap: anywhere;
+    }
+
+    .page-lead {
+      margin-top: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .legal-page {
+        padding-top: 42px;
+        padding-bottom: 60px;
+      }
+
+      .legal-content h2 {
+        font-size: 1.15rem;
+      }
+
+      .language-select {
+        max-width: 130px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient ambient-one"></div>
+
+  <header class="nav-wrap">
+    <nav class="nav container">
+      <a class="brand" href="index.html" aria-label="Enlazo home">
+        <span class="brand-mark">E</span>
+        <span>ENLAZO</span>
+      </a>
+
+      <button class="mobile-menu" aria-label="Toggle navigation">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html" data-i18n="home">Home</a>
+        <a href="commands.html" data-i18n="commands">Commands</a>
+        <a href="dashboard.html" data-i18n="dashboard">Dashboard</a>
+      </div>
+
+      <div class="nav-actions">
+        <select id="privacyLanguage" class="language-select" aria-label="Choose language">
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇲🇽 Español</option>
+          <option value="pt">🇧🇷 Português</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+
+        <a
+          class="button button-small button-primary"
+          href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&amp;scope=bot%20applications.commands"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="invite"
+        >Add to Discord ↗</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container legal-page">
+    <div class="eyebrow" data-i18n="eyebrow">ENLAZO · LEGAL</div>
+
+    <h1>
+      <span data-i18n="titleStart">Privacy</span>
+      <span class="gradient-text" data-i18n="titleEnd">Policy</span>
+    </h1>
+
+    <p class="page-lead">
+      <span data-i18n="updated">Last updated:</span>
+      <time datetime="2026-10-11">October 11, 2026</time>
+    </p>
+
+    <div class="legal-content">
+      <div class="notice-box">
+        <strong data-i18n="draftTitle">Draft for project review</strong>
+        <p data-i18n="draftText">
+          This page is a starting point, not legal advice. Before public launch,
+          confirm it matches the data the live bot actually collects, stores,
+          shares, and deletes.
+        </p>
+      </div>
+
+      <h2 data-i18n="h1">1. Overview</h2>
+      <p data-i18n="p1">
+        Enlazo is a Discord bot designed for games, community interaction,
+        progression features, and server utilities. This policy explains the
+        general categories of information that may be processed when you
+        interact with the bot.
+      </p>
+
+      <h2 data-i18n="h2">2. Information that may be processed</h2>
+      <p data-i18n="p2">
+        Depending on which features are enabled, Enlazo may process Discord
+        user IDs and server IDs, command inputs, game results, XP and level
+        progression, streaks, moderation actions requested by authorized users,
+        and settings needed to operate features.
+      </p>
+      <p data-i18n="p3">
+        Do not submit passwords, payment-card details, government identifiers,
+        or other sensitive information through bot commands.
+      </p>
+
+      <h2 data-i18n="h3">3. How information is used</h2>
+      <p data-i18n="p4">
+        Information may be used to run commands, maintain game sessions,
+        calculate scores and progression, prevent abuse, apply server settings,
+        and troubleshoot errors. The project should collect only what is
+        reasonably needed for these purposes.
+      </p>
+
+      <h2 data-i18n="h4">4. Storage and retention</h2>
+      <p data-i18n="p5">
+        Some bot features may store data in a database so scores and settings
+        persist between restarts. Actual retention periods, backups, and
+        deletion procedures must be documented according to the production
+        deployment before launch.
+      </p>
+
+      <h2 data-i18n="h5">5. Sharing</h2>
+      <p data-i18n="p6">
+        Enlazo does not need your Discord password. Data may be processed by
+        Discord and the hosting or infrastructure providers used to operate
+        the bot. Do not claim that no data is shared unless the production
+        setup has been audited.
+      </p>
+
+      <h2 data-i18n="h6">6. Your choices</h2>
+      <p data-i18n="p7">
+        You can stop interacting with Enlazo or ask the server's administrators
+        to remove the bot. For data access or deletion requests, contact the
+        project maintainers through the official project repository until a
+        dedicated contact channel is published.
+      </p>
+
+      <h2 data-i18n="h7">7. Children and safety</h2>
+      <p data-i18n="p8">
+        Do not use Enlazo to post personal or sensitive information about
+        yourself or others. Server administrators are responsible for
+        configuring their communities and using moderation tools appropriately.
+      </p>
+
+      <h2 data-i18n="h8">8. Changes</h2>
+      <p data-i18n="p9">
+        This policy may be updated as Enlazo changes. The date at the top
+        should be updated whenever material changes are published.
+      </p>
+
+      <h2 data-i18n="h9">9. Contact</h2>
+      <p>
+        <span data-i18n="p10">For project-related privacy questions, use the</span>
+        <a
+          class="text-link inline-link"
+          href="https://github.com/derekelinasano2709-ops/EnlazoBot"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="repository"
+        >official EnlazoBot repository ↗</a>.
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-main">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">E</span>
+        <span>ENLAZO</span>
+      </a>
+
+      <div class="footer-links">
+        <a href="terms.html" data-i18n="terms">Terms of Service</a>
+        <a href="commands.html" data-i18n="commands">Commands</a>
+        <a href="dashboard.html" data-i18n="dashboard">Dashboard</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> Enlazo.</span>
+      <span data-i18n="footerNote">Independent community project.</span>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const translations = {
+        en: {
+          home: "Home",
+          commands: "Commands",
+          dashboard: "Dashboard",
+          invite: "Add to Discord ↗",
+          eyebrow: "ENLAZO · LEGAL",
+          titleStart: "Privacy",
+          titleEnd: "Policy",
+          updated: "Last updated:",
+          draftTitle: "Draft for project review",
+          draftText: "This page is a starting point, not legal advice. Before public launch, confirm it matches the data the live bot actually collects, stores, shares, and deletes.",
+          h1: "1. Overview",
+          p1: "Enlazo is a Discord bot designed for games, community interaction, progression features, and server utilities. This policy explains the general categories of information that may be processed when you interact with the bot.",
+          h2: "2. Information that may be processed",
+          p2: "Depending on which features are enabled, Enlazo may process Discord user IDs and server IDs, command inputs, game results, XP and level progression, streaks, moderation actions requested by authorized users, and settings needed to operate features.",
+          p3: "Do not submit passwords, payment-card details, government identifiers, or other sensitive information through bot commands.",
+          h3: "3. How information is used",
+          p4: "Information may be used to run commands, maintain game sessions, calculate scores and progression, prevent abuse, apply server settings, and troubleshoot errors. The project should collect only what is reasonably needed for these purposes.",
+          h4: "4. Storage and retention",
+          p5: "Some bot features may store data in a database so scores and settings persist between restarts. Actual retention periods, backups, and deletion procedures must be documented according to the production deployment before launch.",
+          h5: "5. Sharing",
+          p6: "Enlazo does not need your Discord password. Data may be processed by Discord and the hosting or infrastructure providers used to operate the bot. Do not claim that no data is shared unless the production setup has been audited.",
+          h6: "6. Your choices",
+          p7: "You can stop interacting with Enlazo or ask the server's administrators to remove the bot. For data access or deletion requests, contact the project maintainers through the official project repository until a dedicated contact channel is published.",
+          h7: "7. Children and safety",
+          p8: "Do not use Enlazo to post personal or sensitive information about yourself or others. Server administrators are responsible for configuring their communities and using moderation tools appropriately.",
+          h8: "8. Changes",
+          p9: "This policy may be updated as Enlazo changes. The date at the top should be updated whenever material changes are published.",
+          h9: "9. Contact",
+          p10: "For project-related privacy questions, use the",
+          repository: "official EnlazoBot repository ↗",
+          terms: "Terms of Service",
+          footerNote: "Independent community project."
+        },
+
+        es: {
+          home: "Inicio",
+          commands: "Comandos",
+          dashboard: "Panel",
+          invite: "Añadir a Discord ↗",
+          eyebrow: "ENLAZO · LEGAL",
+          titleStart: "Política de",
+          titleEnd: "Privacidad",
+          updated: "Última actualización:",
+          draftTitle: "Borrador para revisión",
+          draftText: "Esta página es una base inicial, no asesoría legal. Antes del lanzamiento público, confirma que coincide con los datos que el bot realmente recopila, almacena, comparte y elimina.",
+          h1: "1. Descripción general",
+          p1: "Enlazo es un bot de Discord diseñado para juegos, interacción comunitaria, funciones de progreso y herramientas para servidores. Esta política explica las categorías generales de información que podrían procesarse cuando interactúas con el bot.",
+          h2: "2. Información que podría procesarse",
+          p2: "Según las funciones habilitadas, Enlazo podría procesar identificadores de usuarios y servidores de Discord, entradas de comandos, resultados de juegos, experiencia y niveles, rachas, acciones de moderación solicitadas por usuarios autorizados y ajustes necesarios para las funciones.",
+          p3: "No envíes contraseñas, datos de tarjetas bancarias, identificadores oficiales ni otra información sensible mediante los comandos del bot.",
+          h3: "3. Uso de la información",
+          p4: "La información podría utilizarse para ejecutar comandos, mantener sesiones de juego, calcular puntuaciones y progreso, prevenir abusos, aplicar ajustes del servidor y solucionar errores. El proyecto debería recopilar únicamente los datos razonablemente necesarios para estos fines.",
+          h4: "4. Almacenamiento y conservación",
+          p5: "Algunas funciones podrían guardar datos en una base de datos para conservar puntuaciones y ajustes entre reinicios. Antes del lanzamiento, deben documentarse los periodos reales de conservación, las copias de seguridad y los procedimientos de eliminación según la implementación en producción.",
+          h5: "5. Compartición de datos",
+          p6: "Enlazo no necesita tu contraseña de Discord. Discord y los proveedores de alojamiento o infraestructura utilizados para operar el bot podrían procesar datos. No afirmes que no se comparte ningún dato sin haber revisado la configuración de producción.",
+          h6: "6. Tus opciones",
+          p7: "Puedes dejar de interactuar con Enlazo o pedir a los administradores del servidor que eliminen el bot. Para solicitar acceso o eliminación de datos, contacta a los responsables mediante el repositorio oficial del proyecto hasta que se publique un canal de contacto específico.",
+          h7: "7. Menores y seguridad",
+          p8: "No utilices Enlazo para publicar información personal o sensible sobre ti u otras personas. Los administradores son responsables de configurar sus comunidades y utilizar las herramientas de moderación adecuadamente.",
+          h8: "8. Cambios",
+          p9: "Esta política puede actualizarse a medida que Enlazo evolucione. La fecha superior debe actualizarse cuando se publiquen cambios importantes.",
+          h9: "9. Contacto",
+          p10: "Para preguntas sobre privacidad relacionadas con el proyecto, utiliza el",
+          repository: "repositorio oficial de EnlazoBot ↗",
+          terms: "Términos del servicio",
+          footerNote: "Proyecto comunitario independiente."
+        },
+
+        pt: {
+          home: "Início",
+          commands: "Comandos",
+          dashboard: "Painel",
+          invite: "Adicionar ao Discord ↗",
+          eyebrow: "ENLAZO · JURÍDICO",
+          titleStart: "Política de",
+          titleEnd: "Privacidade",
+          updated: "Última atualização:",
+          draftTitle: "Rascunho para revisão",
+          draftText: "Esta página é um ponto de partida, não aconselhamento jurídico. Antes do lançamento público, confirme se ela corresponde aos dados que o bot realmente coleta, armazena, compartilha e exclui.",
+          h1: "1. Visão geral",
+          p1: "Enlazo é um bot do Discord desenvolvido para jogos, interação comunitária, recursos de progressão e ferramentas para servidores. Esta política explica as categorias gerais de informações que podem ser processadas quando você interage com o bot.",
+          h2: "2. Informações que podem ser processadas",
+          p2: "Dependendo dos recursos ativados, Enlazo pode processar IDs de usuários e servidores do Discord, entradas de comandos, resultados de jogos, XP e níveis, sequências de atividade, ações de moderação solicitadas por usuários autorizados e configurações necessárias para os recursos.",
+          p3: "Não envie senhas, dados de cartões de pagamento, identificadores governamentais ou outras informações sensíveis pelos comandos do bot.",
+          h3: "3. Como as informações são usadas",
+          p4: "As informações podem ser usadas para executar comandos, manter sessões de jogos, calcular pontuações e progressão, prevenir abusos, aplicar configurações do servidor e solucionar erros. O projeto deve coletar apenas o que for razoavelmente necessário para essas finalidades.",
+          h4: "4. Armazenamento e retenção",
+          p5: "Alguns recursos podem armazenar dados em um banco de dados para preservar pontuações e configurações após reinicializações. Os períodos reais de retenção, backups e procedimentos de exclusão devem ser documentados conforme a implantação de produção antes do lançamento.",
+          h5: "5. Compartilhamento",
+          p6: "Enlazo não precisa da sua senha do Discord. O Discord e os provedores de hospedagem ou infraestrutura usados para operar o bot podem processar dados. Não afirme que nenhum dado é compartilhado sem uma auditoria da configuração de produção.",
+          h6: "6. Suas opções",
+          p7: "Você pode parar de interagir com Enlazo ou pedir aos administradores do servidor que removam o bot. Para solicitar acesso ou exclusão de dados, entre em contato com os responsáveis pelo projeto através do repositório oficial até que um canal específico seja publicado.",
+          h7: "7. Crianças e segurança",
+          p8: "Não use Enlazo para publicar informações pessoais ou sensíveis sobre você ou outras pessoas. Os administradores são responsáveis por configurar suas comunidades e usar as ferramentas de moderação adequadamente.",
+          h8: "8. Alterações",
+          p9: "Esta política pode ser atualizada conforme o Enlazo evolui. A data no início deve ser atualizada sempre que mudanças importantes forem publicadas.",
+          h9: "9. Contato",
+          p10: "Para dúvidas sobre privacidade relacionadas ao projeto, use o",
+          repository: "repositório oficial do EnlazoBot ↗",
+          terms: "Termos de Serviço",
+          footerNote: "Projeto comunitário independente."
+        },
+
+        fr: {
+          home: "Accueil",
+          commands: "Commandes",
+          dashboard: "Tableau de bord",
+          invite: "Ajouter à Discord ↗",
+          eyebrow: "ENLAZO · JURIDIQUE",
+          titleStart: "Politique de",
+          titleEnd: "confidentialité",
+          updated: "Dernière mise à jour :",
+          draftTitle: "Brouillon à vérifier",
+          draftText: "Cette page constitue un point de départ et non un conseil juridique. Avant le lancement public, vérifiez qu’elle correspond aux données réellement collectées, stockées, partagées et supprimées par le bot.",
+          h1: "1. Présentation",
+          p1: "Enlazo est un bot Discord conçu pour les jeux, les interactions communautaires, la progression et les outils de serveur. Cette politique présente les catégories générales d’informations susceptibles d’être traitées lorsque vous utilisez le bot.",
+          h2: "2. Informations susceptibles d’être traitées",
+          p2: "Selon les fonctionnalités activées, Enlazo peut traiter les identifiants des utilisateurs et des serveurs Discord, les commandes saisies, les résultats des jeux, l’expérience et les niveaux, les séries d’activité, les actions de modération demandées par des utilisateurs autorisés et les paramètres nécessaires.",
+          p3: "Ne transmettez pas de mots de passe, de données de carte bancaire, d’identifiants officiels ni d’autres informations sensibles via les commandes du bot.",
+          h3: "3. Utilisation des informations",
+          p4: "Les informations peuvent servir à exécuter des commandes, gérer les sessions de jeu, calculer les scores et la progression, prévenir les abus, appliquer les paramètres du serveur et résoudre les erreurs. Le projet ne devrait collecter que les données raisonnablement nécessaires à ces fins.",
+          h4: "4. Stockage et conservation",
+          p5: "Certaines fonctionnalités peuvent stocker des données dans une base de données afin de conserver les scores et les paramètres après un redémarrage. Les durées réelles de conservation, les sauvegardes et les procédures de suppression doivent être documentées avant le lancement selon la configuration de production.",
+          h5: "5. Partage",
+          p6: "Enlazo n’a pas besoin de votre mot de passe Discord. Discord et les fournisseurs d’hébergement ou d’infrastructure utilisés pour faire fonctionner le bot peuvent traiter des données. N’affirmez pas qu’aucune donnée n’est partagée sans avoir vérifié la configuration de production.",
+          h6: "6. Vos choix",
+          p7: "Vous pouvez cesser d’utiliser Enlazo ou demander aux administrateurs du serveur de retirer le bot. Pour demander l’accès ou la suppression de données, contactez les responsables du projet via le dépôt officiel jusqu’à la publication d’un canal de contact dédié.",
+          h7: "7. Mineurs et sécurité",
+          p8: "N’utilisez pas Enlazo pour publier des informations personnelles ou sensibles vous concernant ou concernant d’autres personnes. Les administrateurs sont responsables de la configuration de leur communauté et de l’utilisation appropriée des outils de modération.",
+          h8: "8. Modifications",
+          p9: "Cette politique peut évoluer avec Enlazo. La date en haut de la page doit être mise à jour lors de toute modification importante.",
+          h9: "9. Contact",
+          p10: "Pour toute question concernant la confidentialité du projet, consultez le",
+          repository: "dépôt officiel EnlazoBot ↗",
+          terms: "Conditions d’utilisation",
+          footerNote: "Projet communautaire indépendant."
+        },
+
+        zh: {
+          home: "首页",
+          commands: "命令",
+          dashboard: "控制面板",
+          invite: "添加到 Discord ↗",
+          eyebrow: "ENLAZO · 法律信息",
+          titleStart: "隐私",
+          titleEnd: "政策",
+          updated: "最后更新：",
+          draftTitle: "待审核草稿",
+          draftText: "本页面仅为初始草稿，不构成法律建议。正式公开前，请确认内容与机器人实际收集、存储、共享和删除的数据一致。",
+          h1: "1. 概述",
+          p1: "Enlazo 是一款 Discord 机器人，提供游戏、社区互动、成长进度功能和服务器工具。本政策介绍您使用机器人时可能被处理的信息类别。",
+          h2: "2. 可能处理的信息",
+          p2: "根据启用的功能，Enlazo 可能处理 Discord 用户 ID 和服务器 ID、命令输入、游戏结果、经验值和等级、连续活动记录、授权用户发起的管理操作，以及运行功能所需的设置。",
+          p3: "请勿通过机器人命令提交密码、银行卡信息、政府证件号码或其他敏感信息。",
+          h3: "3. 信息用途",
+          p4: "相关信息可能用于执行命令、管理游戏会话、计算分数和成长进度、防止滥用、应用服务器设置以及排查错误。项目应仅收集实现这些目的所合理必需的信息。",
+          h4: "4. 存储与保留",
+          p5: "部分功能可能将数据存储在数据库中，以便在机器人重启后保留分数和设置。正式发布前，应根据实际生产环境明确记录数据保留期限、备份和删除流程。",
+          h5: "5. 信息共享",
+          p6: "Enlazo 不需要您的 Discord 密码。Discord 以及用于运行机器人的托管或基础设施服务提供商可能会处理数据。在未经生产环境审核前，不应声称完全不共享数据。",
+          h6: "6. 您的选择",
+          p7: "您可以停止使用 Enlazo，或请求服务器管理员移除机器人。在尚未公布专用联系渠道前，如需访问或删除数据，请通过项目的官方代码仓库联系维护者。",
+          h7: "7. 未成年人和安全",
+          p8: "请勿使用 Enlazo 发布您本人或他人的个人或敏感信息。服务器管理员负责配置社区并合理使用管理工具。",
+          h8: "8. 政策变更",
+          p9: "随着 Enlazo 的发展，本政策可能会更新。发布重大变更时，应同步更新页面顶部的日期。",
+          h9: "9. 联系方式",
+          p10: "如有与项目隐私相关的问题，请访问",
+          repository: "EnlazoBot 官方代码仓库 ↗",
+          terms: "服务条款",
+          footerNote: "独立社区项目。"
+        }
+      };
+
+      const languageSelector = document.getElementById("privacyLanguage");
+
+      function applyLanguage(language) {
+        const selected = translations[language] ? language : "en";
+        const dictionary = translations[selected];
+
+        document.documentElement.lang = selected;
+        document.title = selected === "es"
+          ? "Política de privacidad — Enlazo"
+          : selected === "pt"
+          ? "Política de privacidade — Enlazo"
+          : selected === "fr"
+          ? "Politique de confidentialité — Enlazo"
+          : selected === "zh"
+          ? "隐私政策 — Enlazo"
+          : "Privacy Policy — Enlazo";
+
+        document.querySelectorAll("[data-i18n]").forEach(element => {
+          const key = element.dataset.i18n;
+          if (dictionary[key]) {
+            element.textContent = dictionary[key];
+          }
+        });
+
+        languageSelector.value = selected;
+
+        try {
+          localStorage.setItem("enlazo_language", selected);
+        } catch (_) {}
+      }
+
+      let savedLanguage = "en";
+
+      try {
+        savedLanguage = localStorage.getItem("enlazo_language") || "en";
+      } catch (_) {}
+
+      languageSelector.addEventListener("change", event => {
+        applyLanguage(event.target.value);
+      });
+
+      applyLanguage(savedLanguage);
+
+      const year = document.getElementById("year");
+      if (year) year.textContent = new Date().getFullYear();
+
+      // Keep the same theme preference as the main Enlazo website.
+      let savedTheme = "dark";
+
+      try {
+        savedTheme = localStorage.getItem("enlazo_theme") || "dark";
+      } catch (_) {}
+
+      if (savedTheme === "light") {
+        document.body.classList.add("light");
+      }
+
+      // Keep the site's existing mobile navigation working.
+      const mobileMenu = document.querySelector(".mobile-menu");
+      const navLinks = document.querySelector(".nav-links");
+
+      if (mobileMenu && navLinks) {
+        mobileMenu.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+    })();
+  </script>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
