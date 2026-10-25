@@ -1,1 +1,501 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080d1c"><title>Terms of Service — Enlazo</title><link rel="stylesheet" href="assets/style.css"></head><body><div class="ambient ambient-one"></div><header class="nav-wrap"><nav class="nav container"><a class="brand" href="index.html"><span class="brand-mark">E</span><span>ENLAZO</span></a><button class="mobile-menu" aria-label="Toggle navigation">☰</button><div class="nav-links"><a href="index.html">Home</a><a href="commands.html">Commands</a><a href="dashboard.html">Dashboard</a></div><div class="nav-actions"><a class="button button-small button-primary" href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&scope=bot%20applications.commands">Add to Discord ↗</a></div></nav></header><main class="container legal-page"><div class="eyebrow">ENLAZO · LEGAL</div><h1>Terms of <span class="gradient-text">Service</span></h1><p class="page-lead">Last updated: October 11, 2026</p><div class="legal-content"><div class="notice-box"><strong>Draft for project review</strong><p>Review these terms against the bot's actual features and applicable law before treating them as final legal terms.</p></div><h2>1. Acceptance</h2><p>By inviting or using Enlazo, you agree to these terms and to comply with Discord's applicable terms, policies, and community guidelines.</p><h2>2. Service</h2><p>Enlazo provides community games, challenges, progression features, social commands, server utilities, and seasonal features. Features may change, be unavailable, or be removed as the project develops.</p><h2>3. Acceptable use</h2><p>You may not use Enlazo to harass people, spam, disrupt communities, violate others' rights, bypass platform rules, or attempt to exploit, damage, or gain unauthorized access to the service.</p><h2>4. Server permissions</h2><p>Some commands require Discord permissions. Server administrators are responsible for choosing appropriate roles and permissions and for ensuring that moderation actions comply with their server rules and applicable policies.</p><h2>5. Availability and data</h2><p>The service is provided on an evolving, best-effort basis. Game results, XP, streaks, settings, and other stored data may be reset, changed, or temporarily unavailable during maintenance or incidents. Do not rely on Enlazo as the sole record of important information.</p><h2>6. Fair play</h2><p>Do not exploit bugs, automate abuse, manipulate rankings, or interfere with other users' ability to enjoy the service. The maintainers may restrict access when necessary to protect the bot or its communities.</p><h2>7. Third-party services</h2><p>Enlazo operates on Discord and may rely on hosting and other third-party services. Those services are governed by their own terms and policies. Enlazo is not affiliated with or endorsed by Discord.</p><h2>8. Changes and termination</h2><p>These terms may change as the project evolves. Access to the bot may be limited or discontinued when needed for maintenance, security, abuse prevention, or project decisions.</p><h2>9. Disclaimer</h2><p>To the extent permitted by applicable law, Enlazo is provided without a guarantee of uninterrupted or error-free operation. Nothing in these terms removes rights that cannot legally be excluded.</p><h2>10. Contact</h2><p>For questions about these terms, use the <a class="text-link inline-link" href="https://github.com/derekelinasano2709-ops/EnlazoBot" target="_blank" rel="noreferrer">official EnlazoBot repository ↗</a>.</p></div></main><footer class="footer"><div class="container footer-main"><a class="brand" href="index.html"><span class="brand-mark">E</span><span>ENLAZO</span></a><div class="footer-links"><a href="privacy.html">Privacy Policy</a><a href="commands.html">Commands</a><a href="dashboard.html">Dashboard</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> Enlazo.</span><span>Independent community project.</span></div></footer><script src="assets/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080d1c">
+  <meta name="description" content="Read Enlazo's Terms of Service, including rules for using the Discord bot, server permissions, fair play, and service availability.">
+  <title>Terms of Service — Enlazo</title>
+  <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    .language-select {
+      appearance: none;
+      background: rgba(255,255,255,.06);
+      color: var(--text, #f5f7ff);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 10px;
+      padding: 10px 30px 10px 12px;
+      font: inherit;
+      cursor: pointer;
+      max-width: 150px;
+    }
+
+    .language-select option {
+      background: #080d1c;
+      color: #fff;
+    }
+
+    .legal-page {
+      padding-top: 65px;
+      padding-bottom: 90px;
+    }
+
+    .legal-content {
+      max-width: 850px;
+      margin: 35px auto 0;
+      line-height: 1.8;
+    }
+
+    .legal-content h2 {
+      margin-top: 34px;
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .legal-content p {
+      line-height: 1.85;
+    }
+
+    .legal-content .notice-box {
+      margin-bottom: 30px;
+    }
+
+    .legal-content a {
+      overflow-wrap: anywhere;
+    }
+
+    .page-lead {
+      margin-top: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .legal-page {
+        padding-top: 42px;
+        padding-bottom: 60px;
+      }
+
+      .legal-content h2 {
+        font-size: 1.15rem;
+      }
+
+      .language-select {
+        max-width: 130px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient ambient-one"></div>
+
+  <header class="nav-wrap">
+    <nav class="nav container">
+      <a class="brand" href="index.html" aria-label="Enlazo home">
+        <span class="brand-mark">E</span>
+        <span>ENLAZO</span>
+      </a>
+
+      <button class="mobile-menu" aria-label="Toggle navigation">☰</button>
+
+      <div class="nav-links">
+        <a href="index.html" data-i18n="home">Home</a>
+        <a href="commands.html" data-i18n="commands">Commands</a>
+        <a href="dashboard.html" data-i18n="dashboard">Dashboard</a>
+      </div>
+
+      <div class="nav-actions">
+        <select id="termsLanguage" class="language-select" aria-label="Choose language">
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇲🇽 Español</option>
+          <option value="pt">🇧🇷 Português</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+
+        <a
+          class="button button-small button-primary"
+          href="https://discord.com/oauth2/authorize?client_id=1558587255726276730&amp;scope=bot%20applications.commands"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="invite"
+        >Add to Discord ↗</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container legal-page">
+    <div class="eyebrow" data-i18n="eyebrow">ENLAZO · LEGAL</div>
+
+    <h1>
+      <span data-i18n="titleStart">Terms of</span>
+      <span class="gradient-text" data-i18n="titleEnd">Service</span>
+    </h1>
+
+    <p class="page-lead">
+      <span data-i18n="updated">Last updated:</span>
+      <time datetime="2026-10-11" data-i18n="date">October 11, 2026</time>
+    </p>
+
+    <div class="legal-content">
+      <div class="notice-box">
+        <strong data-i18n="draftTitle">Draft for project review</strong>
+        <p data-i18n="draftText">
+          Review these terms against the bot's actual features and applicable
+          law before treating them as final legal terms.
+        </p>
+      </div>
+
+      <h2 data-i18n="h1">1. Acceptance</h2>
+      <p data-i18n="p1">
+        By inviting or using Enlazo, you agree to these terms and to comply
+        with Discord's applicable terms, policies, and community guidelines.
+      </p>
+
+      <h2 data-i18n="h2">2. Service</h2>
+      <p data-i18n="p2">
+        Enlazo provides community games, challenges, progression features,
+        social commands, server utilities, and seasonal features. Features may
+        change, be unavailable, or be removed as the project develops.
+      </p>
+
+      <h2 data-i18n="h3">3. Acceptable use</h2>
+      <p data-i18n="p3">
+        You may not use Enlazo to harass people, spam, disrupt communities,
+        violate others' rights, bypass platform rules, or attempt to exploit,
+        damage, or gain unauthorized access to the service.
+      </p>
+
+      <h2 data-i18n="h4">4. Server permissions</h2>
+      <p data-i18n="p4">
+        Some commands require Discord permissions. Server administrators are
+        responsible for choosing appropriate roles and permissions and for
+        ensuring that moderation actions comply with their server rules and
+        applicable policies.
+      </p>
+
+      <h2 data-i18n="h5">5. Availability and data</h2>
+      <p data-i18n="p5">
+        The service is provided on an evolving, best-effort basis. Game
+        results, XP, streaks, settings, and other stored data may be reset,
+        changed, or temporarily unavailable during maintenance or incidents.
+        Do not rely on Enlazo as the sole record of important information.
+      </p>
+
+      <h2 data-i18n="h6">6. Fair play</h2>
+      <p data-i18n="p6">
+        Do not exploit bugs, automate abuse, manipulate rankings, or interfere
+        with other users' ability to enjoy the service. The maintainers may
+        restrict access when necessary to protect the bot or its communities.
+      </p>
+
+      <h2 data-i18n="h7">7. Third-party services</h2>
+      <p data-i18n="p7">
+        Enlazo operates on Discord and may rely on hosting and other
+        third-party services. Those services are governed by their own terms
+        and policies. Enlazo is not affiliated with or endorsed by Discord.
+      </p>
+
+      <h2 data-i18n="h8">8. Changes and termination</h2>
+      <p data-i18n="p8">
+        These terms may change as the project evolves. Access to the bot may
+        be limited or discontinued when needed for maintenance, security,
+        abuse prevention, or project decisions.
+      </p>
+
+      <h2 data-i18n="h9">9. Disclaimer</h2>
+      <p data-i18n="p9">
+        To the extent permitted by applicable law, Enlazo is provided without
+        a guarantee of uninterrupted or error-free operation. Nothing in these
+        terms removes rights that cannot legally be excluded.
+      </p>
+
+      <h2 data-i18n="h10">10. Contact</h2>
+      <p>
+        <span data-i18n="p10">For questions about these terms, use the</span>
+        <a
+          class="text-link inline-link"
+          href="https://github.com/derekelinasano2709-ops/EnlazoBot"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="repository"
+        >official EnlazoBot repository ↗</a>.
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-main">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">E</span>
+        <span>ENLAZO</span>
+      </a>
+
+      <div class="footer-links">
+        <a href="privacy.html" data-i18n="privacy">Privacy Policy</a>
+        <a href="commands.html" data-i18n="commands">Commands</a>
+        <a href="dashboard.html" data-i18n="dashboard">Dashboard</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> Enlazo.</span>
+      <span data-i18n="footerNote">Independent community project.</span>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const translations = {
+        en: {
+          home: "Home",
+          commands: "Commands",
+          dashboard: "Dashboard",
+          invite: "Add to Discord ↗",
+          eyebrow: "ENLAZO · LEGAL",
+          titleStart: "Terms of",
+          titleEnd: "Service",
+          updated: "Last updated:",
+          date: "October 11, 2026",
+          draftTitle: "Draft for project review",
+          draftText: "Review these terms against the bot's actual features and applicable law before treating them as final legal terms.",
+          h1: "1. Acceptance",
+          p1: "By inviting or using Enlazo, you agree to these terms and to comply with Discord's applicable terms, policies, and community guidelines.",
+          h2: "2. Service",
+          p2: "Enlazo provides community games, challenges, progression features, social commands, server utilities, and seasonal features. Features may change, be unavailable, or be removed as the project develops.",
+          h3: "3. Acceptable use",
+          p3: "You may not use Enlazo to harass people, spam, disrupt communities, violate others' rights, bypass platform rules, or attempt to exploit, damage, or gain unauthorized access to the service.",
+          h4: "4. Server permissions",
+          p4: "Some commands require Discord permissions. Server administrators are responsible for choosing appropriate roles and permissions and for ensuring that moderation actions comply with their server rules and applicable policies.",
+          h5: "5. Availability and data",
+          p5: "The service is provided on an evolving, best-effort basis. Game results, XP, streaks, settings, and other stored data may be reset, changed, or temporarily unavailable during maintenance or incidents. Do not rely on Enlazo as the sole record of important information.",
+          h6: "6. Fair play",
+          p6: "Do not exploit bugs, automate abuse, manipulate rankings, or interfere with other users' ability to enjoy the service. The maintainers may restrict access when necessary to protect the bot or its communities.",
+          h7: "7. Third-party services",
+          p7: "Enlazo operates on Discord and may rely on hosting and other third-party services. Those services are governed by their own terms and policies. Enlazo is not affiliated with or endorsed by Discord.",
+          h8: "8. Changes and termination",
+          p8: "These terms may change as the project evolves. Access to the bot may be limited or discontinued when needed for maintenance, security, abuse prevention, or project decisions.",
+          h9: "9. Disclaimer",
+          p9: "To the extent permitted by applicable law, Enlazo is provided without a guarantee of uninterrupted or error-free operation. Nothing in these terms removes rights that cannot legally be excluded.",
+          h10: "10. Contact",
+          p10: "For questions about these terms, use the",
+          repository: "official EnlazoBot repository ↗",
+          privacy: "Privacy Policy",
+          footerNote: "Independent community project."
+        },
+
+        es: {
+          home: "Inicio",
+          commands: "Comandos",
+          dashboard: "Panel",
+          invite: "Añadir a Discord ↗",
+          eyebrow: "ENLAZO · LEGAL",
+          titleStart: "Términos del",
+          titleEnd: "Servicio",
+          updated: "Última actualización:",
+          date: "11 de octubre de 2026",
+          draftTitle: "Borrador para revisión",
+          draftText: "Revisa estos términos comparándolos con las funciones reales del bot y las leyes aplicables antes de considerarlos definitivos.",
+          h1: "1. Aceptación",
+          p1: "Al invitar o utilizar Enlazo, aceptas estos términos y te comprometes a cumplir las condiciones, políticas y normas comunitarias aplicables de Discord.",
+          h2: "2. Servicio",
+          p2: "Enlazo ofrece juegos comunitarios, desafíos, funciones de progreso, comandos sociales, herramientas para servidores y funciones de temporada. Las funciones pueden cambiar, dejar de estar disponibles o eliminarse conforme evolucione el proyecto.",
+          h3: "3. Uso aceptable",
+          p3: "No puedes utilizar Enlazo para acosar, enviar spam, interrumpir comunidades, vulnerar derechos ajenos, evadir las reglas de la plataforma ni intentar explotar, dañar u obtener acceso no autorizado al servicio.",
+          h4: "4. Permisos del servidor",
+          p4: "Algunos comandos requieren permisos de Discord. Los administradores son responsables de elegir los roles y permisos adecuados y de garantizar que las acciones de moderación cumplan las reglas del servidor y las políticas aplicables.",
+          h5: "5. Disponibilidad y datos",
+          p5: "El servicio evoluciona y se ofrece con esfuerzos razonables para mantenerlo operativo. Los resultados de juegos, la experiencia, las rachas, los ajustes y otros datos almacenados podrían restablecerse, modificarse o quedar temporalmente inaccesibles durante el mantenimiento o ante incidentes. No dependas de Enlazo como único registro de información importante.",
+          h6: "6. Juego limpio",
+          p6: "No explotes errores, automatices abusos, manipules clasificaciones ni interfieras con la experiencia de otros usuarios. Los responsables pueden restringir el acceso cuando sea necesario para proteger el bot o sus comunidades.",
+          h7: "7. Servicios de terceros",
+          p7: "Enlazo funciona en Discord y puede depender de servicios de alojamiento y otros proveedores externos. Estos servicios se rigen por sus propias condiciones y políticas. Enlazo no está afiliado ni cuenta con el respaldo oficial de Discord.",
+          h8: "8. Cambios y finalización",
+          p8: "Estos términos pueden cambiar conforme evolucione el proyecto. El acceso al bot puede limitarse o interrumpirse por motivos de mantenimiento, seguridad, prevención de abusos o decisiones del proyecto.",
+          h9: "9. Exención de garantías",
+          p9: "En la medida permitida por la legislación aplicable, Enlazo se ofrece sin garantizar un funcionamiento ininterrumpido o libre de errores. Estos términos no eliminan los derechos que legalmente no puedan excluirse.",
+          h10: "10. Contacto",
+          p10: "Si tienes preguntas sobre estos términos, utiliza el",
+          repository: "repositorio oficial de EnlazoBot ↗",
+          privacy: "Política de privacidad",
+          footerNote: "Proyecto comunitario independiente."
+        },
+
+        pt: {
+          home: "Início",
+          commands: "Comandos",
+          dashboard: "Painel",
+          invite: "Adicionar ao Discord ↗",
+          eyebrow: "ENLAZO · JURÍDICO",
+          titleStart: "Termos de",
+          titleEnd: "Serviço",
+          updated: "Última atualização:",
+          date: "11 de outubro de 2026",
+          draftTitle: "Rascunho para revisão",
+          draftText: "Revise estes termos de acordo com os recursos reais do bot e a legislação aplicável antes de considerá-los definitivos.",
+          h1: "1. Aceitação",
+          p1: "Ao adicionar ou usar o Enlazo, você concorda com estes termos e com as condições, políticas e diretrizes comunitárias aplicáveis do Discord.",
+          h2: "2. Serviço",
+          p2: "O Enlazo oferece jogos comunitários, desafios, recursos de progressão, comandos sociais, ferramentas para servidores e recursos sazonais. Os recursos podem mudar, ficar indisponíveis ou ser removidos conforme o projeto evolui.",
+          h3: "3. Uso aceitável",
+          p3: "Você não pode usar o Enlazo para assediar pessoas, enviar spam, interromper comunidades, violar direitos de terceiros, contornar regras da plataforma ou tentar explorar, danificar ou acessar o serviço sem autorização.",
+          h4: "4. Permissões do servidor",
+          p4: "Alguns comandos exigem permissões do Discord. Os administradores são responsáveis por escolher funções e permissões adequadas e garantir que as ações de moderação respeitem as regras do servidor e as políticas aplicáveis.",
+          h5: "5. Disponibilidade e dados",
+          p5: "O serviço evolui e é fornecido com esforços razoáveis para mantê-lo disponível. Resultados de jogos, XP, sequências, configurações e outros dados armazenados podem ser redefinidos, alterados ou ficar temporariamente indisponíveis durante manutenções ou incidentes. Não dependa do Enlazo como único registro de informações importantes.",
+          h6: "6. Jogo limpo",
+          p6: "Não explore erros, automatize abusos, manipule classificações nem interfira na experiência de outros usuários. Os responsáveis podem restringir o acesso quando necessário para proteger o bot ou suas comunidades.",
+          h7: "7. Serviços de terceiros",
+          p7: "O Enlazo funciona no Discord e pode depender de hospedagem e outros serviços de terceiros. Esses serviços são regidos por seus próprios termos e políticas. O Enlazo não é afiliado nem endossado pelo Discord.",
+          h8: "8. Alterações e encerramento",
+          p8: "Estes termos podem mudar conforme o projeto evolui. O acesso ao bot pode ser limitado ou encerrado por motivos de manutenção, segurança, prevenção de abusos ou decisões do projeto.",
+          h9: "9. Isenção de garantias",
+          p9: "Na medida permitida pela legislação aplicável, o Enlazo é fornecido sem garantia de funcionamento ininterrupto ou livre de erros. Estes termos não eliminam direitos que legalmente não possam ser excluídos.",
+          h10: "10. Contato",
+          p10: "Para dúvidas sobre estes termos, use o",
+          repository: "repositório oficial do EnlazoBot ↗",
+          privacy: "Política de Privacidade",
+          footerNote: "Projeto comunitário independente."
+        },
+
+        fr: {
+          home: "Accueil",
+          commands: "Commandes",
+          dashboard: "Tableau de bord",
+          invite: "Ajouter à Discord ↗",
+          eyebrow: "ENLAZO · JURIDIQUE",
+          titleStart: "Conditions d’",
+          titleEnd: "utilisation",
+          updated: "Dernière mise à jour :",
+          date: "11 octobre 2026",
+          draftTitle: "Brouillon à vérifier",
+          draftText: "Vérifiez ces conditions au regard des fonctionnalités réelles du bot et du droit applicable avant de les considérer comme définitives.",
+          h1: "1. Acceptation",
+          p1: "En ajoutant ou en utilisant Enlazo, vous acceptez ces conditions ainsi que les conditions, politiques et règles communautaires applicables de Discord.",
+          h2: "2. Service",
+          p2: "Enlazo propose des jeux communautaires, des défis, des fonctionnalités de progression, des commandes sociales, des outils pour serveurs et des fonctionnalités saisonnières. Les fonctionnalités peuvent évoluer, devenir indisponibles ou être supprimées au fil du projet.",
+          h3: "3. Utilisation acceptable",
+          p3: "Vous ne pouvez pas utiliser Enlazo pour harceler des personnes, envoyer du spam, perturber des communautés, porter atteinte aux droits d’autrui, contourner les règles de la plateforme ou tenter d’exploiter, d’endommager ou d’accéder au service sans autorisation.",
+          h4: "4. Permissions du serveur",
+          p4: "Certaines commandes nécessitent des permissions Discord. Les administrateurs sont responsables du choix des rôles et permissions appropriés et du respect des règles du serveur et des politiques applicables lors des actions de modération.",
+          h5: "5. Disponibilité et données",
+          p5: "Le service évolue et est fourni avec des efforts raisonnables pour rester disponible. Les résultats des jeux, l’expérience, les séries d’activité, les paramètres et d’autres données peuvent être réinitialisés, modifiés ou temporairement indisponibles pendant une maintenance ou un incident. Ne comptez pas sur Enlazo comme unique archive d’informations importantes.",
+          h6: "6. Fair-play",
+          p6: "N’exploitez pas les bugs, n’automatisez pas les abus, ne manipulez pas les classements et ne perturbez pas l’expérience des autres utilisateurs. Les responsables peuvent restreindre l’accès lorsque cela est nécessaire pour protéger le bot ou ses communautés.",
+          h7: "7. Services tiers",
+          p7: "Enlazo fonctionne sur Discord et peut dépendre de services d’hébergement ou d’autres prestataires tiers. Ces services sont régis par leurs propres conditions et politiques. Enlazo n’est ni affilié à Discord ni approuvé par cette plateforme.",
+          h8: "8. Modifications et arrêt",
+          p8: "Ces conditions peuvent évoluer avec le projet. L’accès au bot peut être limité ou interrompu pour des raisons de maintenance, de sécurité, de prévention des abus ou à la suite de décisions du projet.",
+          h9: "9. Exclusion de garanties",
+          p9: "Dans la mesure autorisée par le droit applicable, Enlazo est fourni sans garantie de fonctionnement ininterrompu ou sans erreur. Ces conditions ne suppriment aucun droit qui ne peut légalement être exclu.",
+          h10: "10. Contact",
+          p10: "Pour toute question concernant ces conditions, consultez le",
+          repository: "dépôt officiel EnlazoBot ↗",
+          privacy: "Politique de confidentialité",
+          footerNote: "Projet communautaire indépendant."
+        },
+
+        zh: {
+          home: "首页",
+          commands: "命令",
+          dashboard: "控制面板",
+          invite: "添加到 Discord ↗",
+          eyebrow: "ENLAZO · 法律信息",
+          titleStart: "服务",
+          titleEnd: "条款",
+          updated: "最后更新：",
+          date: "2026年10月11日",
+          draftTitle: "待审核草稿",
+          draftText: "在将这些条款视为正式条款之前，请根据机器人的实际功能和适用法律进行审核。",
+          h1: "1. 接受条款",
+          p1: "添加或使用 Enlazo 即表示您同意这些条款，并同意遵守 Discord 适用的服务条款、政策和社区准则。",
+          h2: "2. 服务内容",
+          p2: "Enlazo 提供社区游戏、挑战、成长进度功能、社交命令、服务器工具和季节性功能。随着项目发展，相关功能可能发生变化、暂时不可用或被移除。",
+          h3: "3. 可接受的使用方式",
+          p3: "不得利用 Enlazo 骚扰他人、发送垃圾信息、干扰社区、侵犯他人权利、规避平台规则，或试图利用漏洞、破坏服务或未经授权访问服务。",
+          h4: "4. 服务器权限",
+          p4: "部分命令需要 Discord 权限。服务器管理员负责选择适当的角色和权限，并确保管理操作符合服务器规则及适用政策。",
+          h5: "5. 服务可用性与数据",
+          p5: "本服务会持续改进，并尽合理努力保持运行。游戏结果、经验值、连续记录、设置及其他存储数据可能在维护或发生故障时被重置、修改或暂时无法访问。请勿将 Enlazo 作为重要信息的唯一记录来源。",
+          h6: "6. 公平游戏",
+          p6: "不得利用漏洞、自动化滥用行为、操纵排名或干扰其他用户的使用体验。为保护机器人或其社区，维护人员可在必要时限制访问。",
+          h7: "7. 第三方服务",
+          p7: "Enlazo 运行于 Discord 平台，并可能依赖托管服务及其他第三方服务。这些服务受其各自条款和政策约束。Enlazo 与 Discord 没有隶属关系，也未获得 Discord 的官方认可。",
+          h8: "8. 条款变更与服务终止",
+          p8: "随着项目发展，这些条款可能发生变化。因维护、安全、预防滥用或项目决策等原因，机器人访问可能受到限制或停止。",
+          h9: "9. 免责声明",
+          p9: "在适用法律允许的范围内，Enlazo 不保证服务始终可用或完全没有错误。本条款不排除法律规定不得排除的权利。",
+          h10: "10. 联系方式",
+          p10: "如对这些条款有疑问，请访问",
+          repository: "EnlazoBot 官方代码仓库 ↗",
+          privacy: "隐私政策",
+          footerNote: "独立社区项目。"
+        }
+      };
+
+      const selector = document.getElementById("termsLanguage");
+
+      function applyLanguage(language) {
+        const selected = translations[language] ? language : "en";
+        const dictionary = translations[selected];
+
+        document.documentElement.lang = selected;
+
+        const titles = {
+          en: "Terms of Service — Enlazo",
+          es: "Términos del servicio — Enlazo",
+          pt: "Termos de serviço — Enlazo",
+          fr: "Conditions d’utilisation — Enlazo",
+          zh: "服务条款 — Enlazo"
+        };
+
+        document.title = titles[selected];
+
+        document.querySelectorAll("[data-i18n]").forEach(element => {
+          const key = element.dataset.i18n;
+
+          if (dictionary[key]) {
+            element.textContent = dictionary[key];
+          }
+        });
+
+        selector.value = selected;
+
+        try {
+          localStorage.setItem("enlazo_language", selected);
+        } catch (_) {}
+      }
+
+      let savedLanguage = "en";
+
+      try {
+        savedLanguage = localStorage.getItem("enlazo_language") || "en";
+      } catch (_) {}
+
+      selector.addEventListener("change", event => {
+        applyLanguage(event.target.value);
+      });
+
+      applyLanguage(savedLanguage);
+
+      const year = document.getElementById("year");
+      if (year) {
+        year.textContent = new Date().getFullYear();
+      }
+
+      // Use the theme preference saved by the main Enlazo website.
+      let savedTheme = "dark";
+
+      try {
+        savedTheme = localStorage.getItem("enlazo_theme") || "dark";
+      } catch (_) {}
+
+      if (savedTheme === "light") {
+        document.body.classList.add("light");
+      }
+
+      // Mobile navigation.
+      const mobileMenu = document.querySelector(".mobile-menu");
+      const navLinks = document.querySelector(".nav-links");
+
+      if (mobileMenu && navLinks) {
+        mobileMenu.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+    })();
+  </script>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
