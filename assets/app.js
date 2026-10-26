@@ -1,21 +1,48 @@
+
 (() => {
   'use strict';
+
+  // ==========================================
+  // 1. CONFIGURACIÓN
+  // ==========================================
 
   const $ = id => document.getElementById(id);
   const cfg = window.ENLAZO_CONFIG || {};
 
-  const configured = Boolean(
-    cfg.supabaseUrl &&
-    cfg.supabaseAnonKey
-  );
+  const configured = Boolean(cfg.supabaseUrl && cfg.supabaseAnonKey);
 
-  const client =
-    configured && window.supabase
-      ? window.supabase.createClient(
-          cfg.supabaseUrl,
-          cfg.supabaseAnonKey
-        )
-      : null;
+  const client = configured && window.supabase
+    ? window.supabase.createClient(
+        cfg.supabaseUrl,
+        cfg.supabaseAnonKey,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      )
+    : null;
+
+  const TOKEN_KEY = 'enlazo_discord_provider_token';
+
+  let lang = localStorage.getItem('enlazo_language') || 'es';
+  let currentSession = null;
+  let providerToken = null;
+  let loadSequence = 0;
+
+  // El token de Discord solo se conserva durante esta sesión
+  // de la pestaña; nunca se guarda en localStorage.
+  try {
+    providerToken = sessionStorage.getItem(TOKEN_KEY);
+  } catch (_) {
+    providerToken = null;
+  }
+
+  // ==========================================
+  // 2. IDIOMAS
+  // ==========================================
 
   const languages = {
     es: {
@@ -53,16 +80,7 @@
       commandsKicker: 'ENLAZO BOT',
       commandsTitle: '90 formas de <span class="gradient">conectar.</span>',
       commandsDesc: 'Explora las categorías principales de la edición definitiva del bot.',
-      chips: [
-        '⚡ Juegos',
-        '🛡️ Moderación',
-        '🎭 Roleplay',
-        '📈 Niveles',
-        '💤 AFK',
-        '🧠 Trivia',
-        '🌎 Idiomas',
-        '🏆 Retos'
-      ],
+      chips: ['⚡ Juegos', '🛡️ Moderación', '🎭 Roleplay', '📈 Niveles', '💤 AFK', '🧠 Trivia', '🌎 Idiomas', '🏆 Retos'],
       ctaTitle: '¿Listo para conectar tu comunidad?',
       ctaDesc: 'Una nueva forma de vivir Discord empieza con Enlazo.',
       invite: 'Añadir Enlazo ↗',
@@ -75,14 +93,17 @@
       adminCount: n => `${n} servidor(es) con permisos de administración`,
       administrator: 'Administrador · Configuración disponible al conectar la API de Enlazo',
       noAdmins: 'No se encontraron servidores donde tengas permisos de administración.',
-      noToken: 'La sesión está activa, pero Discord no proporcionó un token temporal para consultar los servidores. Cierra sesión e inténtalo de nuevo.',
-      discordError: 'Discord no autorizó la consulta. Vuelve a iniciar sesión.',
+      noToken: 'Tu sesión está activa, pero falta el token de Discord para consultar los servidores. Pulsa «Reconectar Discord».',
+      discordError: 'Discord rechazó la consulta. Es posible que debas volver a autorizar la cuenta.',
+      unauthorized: 'El acceso de Discord ha caducado o no es válido. Vuelve a autorizar tu cuenta.',
+      forbidden: 'Discord no permite consultar estos datos. Comprueba los permisos autorizados.',
       unexpected: 'Respuesta inesperada de Discord.',
-      loadError: 'No se pudieron cargar los servidores. Cierra sesión y vuelve a intentarlo.',
+      loadError: 'No se pudieron cargar los servidores. Inténtalo de nuevo.',
       loginError: 'No se pudo iniciar sesión: ',
-      configure: 'Para activar el acceso real, configura Supabase en config.js.',
+      configure: 'Comprueba la URL y la clave pública de Supabase en config.js.',
       signedOut: 'Sesión cerrada',
       logout: 'Cerrar sesión',
+      reconnect: 'Reconectar Discord ↗',
       theme: 'Cambiar tema',
       footer: '© Enlazo · Connect Through Play'
     },
@@ -122,16 +143,7 @@
       commandsKicker: 'ENLAZO BOT',
       commandsTitle: '90 ways to <span class="gradient">connect.</span>',
       commandsDesc: 'Explore the main categories in the bot’s definitive edition.',
-      chips: [
-        '⚡ Games',
-        '🛡️ Moderation',
-        '🎭 Roleplay',
-        '📈 Levels',
-        '💤 AFK',
-        '🧠 Trivia',
-        '🌎 Languages',
-        '🏆 Challenges'
-      ],
+      chips: ['⚡ Games', '🛡️ Moderation', '🎭 Roleplay', '📈 Levels', '💤 AFK', '🧠 Trivia', '🌎 Languages', '🏆 Challenges'],
       ctaTitle: 'Ready to connect your community?',
       ctaDesc: 'A new way to experience Discord starts with Enlazo.',
       invite: 'Add Enlazo ↗',
@@ -144,14 +156,17 @@
       adminCount: n => `${n} server(s) with administrator permissions`,
       administrator: 'Administrator · Settings require the Enlazo API',
       noAdmins: 'No servers with administrator permissions were found.',
-      noToken: 'Your session is active, but Discord did not provide a temporary token to retrieve servers. Sign out and try again.',
-      discordError: 'Discord did not authorize the request. Please sign in again.',
+      noToken: 'Your session is active, but the Discord token needed to retrieve servers is missing. Click “Reconnect Discord”.',
+      discordError: 'Discord rejected the request. You may need to authorize your account again.',
+      unauthorized: 'Your Discord access has expired or is invalid. Authorize your account again.',
+      forbidden: 'Discord does not allow this request. Check the authorized permissions.',
       unexpected: 'Unexpected response from Discord.',
-      loadError: 'Could not load servers. Sign out and try again.',
+      loadError: 'Could not load servers. Please try again.',
       loginError: 'Could not sign in: ',
-      configure: 'To enable login, configure Supabase in config.js.',
+      configure: 'Check the Supabase URL and public key in config.js.',
       signedOut: 'Signed out',
       logout: 'Sign out',
+      reconnect: 'Reconnect Discord ↗',
       theme: 'Change theme',
       footer: '© Enlazo · Connect Through Play'
     },
@@ -191,16 +206,7 @@
       commandsKicker: 'ENLAZO BOT',
       commandsTitle: '90 maneiras de <span class="gradient">conectar.</span>',
       commandsDesc: 'Explore as principais categorias da edição definitiva do bot.',
-      chips: [
-        '⚡ Jogos',
-        '🛡️ Moderação',
-        '🎭 Roleplay',
-        '📈 Níveis',
-        '💤 AFK',
-        '🧠 Trivia',
-        '🌎 Idiomas',
-        '🏆 Desafios'
-      ],
+      chips: ['⚡ Jogos', '🛡️ Moderação', '🎭 Roleplay', '📈 Níveis', '💤 AFK', '🧠 Trivia', '🌎 Idiomas', '🏆 Desafios'],
       ctaTitle: 'Pronto para conectar sua comunidade?',
       ctaDesc: 'Uma nova forma de viver o Discord começa com o Enlazo.',
       invite: 'Adicionar Enlazo ↗',
@@ -210,17 +216,20 @@
       loading: 'Obtendo informações autorizadas…',
       loadingDiscord: 'Carregando dados do Discord…',
       verified: 'Conta verificada pelo Discord',
-      adminCount: n => `${n} servidor(es) com permissões de administrador`,
+      adminCount: n => `${n} servidor(es) com permissões de administração`,
       administrator: 'Administrador · Configurações exigem a API do Enlazo',
-      noAdmins: 'Nenhum servidor com permissões de administrador foi encontrado.',
-      noToken: 'A sessão está ativa, mas o Discord não forneceu um token temporário para consultar os servidores. Entre novamente.',
-      discordError: 'O Discord não autorizou a consulta. Entre novamente.',
+      noAdmins: 'Nenhum servidor com permissões de administração foi encontrado.',
+      noToken: 'Sua sessão está ativa, mas falta o token do Discord para consultar os servidores. Clique em “Reconectar Discord”.',
+      discordError: 'O Discord rejeitou a consulta. Talvez seja necessário autorizar novamente.',
+      unauthorized: 'O acesso do Discord expirou ou é inválido. Autorize novamente.',
+      forbidden: 'O Discord não permite esta consulta. Verifique as permissões autorizadas.',
       unexpected: 'Resposta inesperada do Discord.',
-      loadError: 'Não foi possível carregar os servidores. Entre novamente.',
+      loadError: 'Não foi possível carregar os servidores. Tente novamente.',
       loginError: 'Não foi possível entrar: ',
-      configure: 'Configure o Supabase em config.js para ativar o login.',
+      configure: 'Verifique a URL e a chave pública do Supabase em config.js.',
       signedOut: 'Sessão encerrada',
       logout: 'Sair',
+      reconnect: 'Reconectar Discord ↗',
       theme: 'Alterar tema',
       footer: '© Enlazo · Connect Through Play'
     },
@@ -260,16 +269,7 @@
       commandsKicker: 'ENLAZO BOT',
       commandsTitle: '90 façons de <span class="gradient">se connecter.</span>',
       commandsDesc: 'Découvrez les principales catégories de l’édition définitive du bot.',
-      chips: [
-        '⚡ Jeux',
-        '🛡️ Modération',
-        '🎭 Roleplay',
-        '📈 Niveaux',
-        '💤 AFK',
-        '🧠 Quiz',
-        '🌎 Langues',
-        '🏆 Défis'
-      ],
+      chips: ['⚡ Jeux', '🛡️ Modération', '🎭 Roleplay', '📈 Niveaux', '💤 AFK', '🧠 Quiz', '🌎 Langues', '🏆 Défis'],
       ctaTitle: 'Prêt à connecter votre communauté ?',
       ctaDesc: 'Une nouvelle façon de vivre Discord commence avec Enlazo.',
       invite: 'Ajouter Enlazo ↗',
@@ -282,14 +282,17 @@
       adminCount: n => `${n} serveur(s) avec des droits d’administration`,
       administrator: 'Administrateur · Les paramètres nécessitent l’API Enlazo',
       noAdmins: 'Aucun serveur avec des droits d’administration trouvé.',
-      noToken: 'La session est active, mais Discord n’a pas fourni de jeton temporaire pour récupérer les serveurs. Reconnectez-vous.',
-      discordError: 'Discord n’a pas autorisé la demande. Reconnectez-vous.',
+      noToken: 'Votre session est active, mais le jeton Discord est manquant. Cliquez sur « Reconnecter Discord ». ',
+      discordError: 'Discord a refusé la demande. Vous devrez peut-être autoriser à nouveau votre compte.',
+      unauthorized: 'Votre accès Discord a expiré ou est invalide. Autorisez à nouveau votre compte.',
+      forbidden: 'Discord ne permet pas cette demande. Vérifiez les autorisations accordées.',
       unexpected: 'Réponse inattendue de Discord.',
-      loadError: 'Impossible de charger les serveurs. Reconnectez-vous.',
+      loadError: 'Impossible de charger les serveurs. Réessayez.',
       loginError: 'Connexion impossible : ',
-      configure: 'Configurez Supabase dans config.js pour activer la connexion.',
+      configure: 'Vérifiez l’URL et la clé publique Supabase dans config.js.',
       signedOut: 'Déconnexion effectuée',
       logout: 'Déconnexion',
+      reconnect: 'Reconnecter Discord ↗',
       theme: 'Changer de thème',
       footer: '© Enlazo · Connect Through Play'
     },
@@ -329,16 +332,7 @@
       commandsKicker: 'ENLAZO BOT',
       commandsTitle: '90 种<span class="gradient">连接方式。</span>',
       commandsDesc: '探索机器人最终版本的主要功能分类。',
-      chips: [
-        '⚡ 游戏',
-        '🛡️ 管理',
-        '🎭 角色扮演',
-        '📈 等级',
-        '💤 AFK',
-        '🧠 问答',
-        '🌎 语言',
-        '🏆 挑战'
-      ],
+      chips: ['⚡ 游戏', '🛡️ 管理', '🎭 角色扮演', '📈 等级', '💤 AFK', '🧠 问答', '🌎 语言', '🏆 挑战'],
       ctaTitle: '准备好连接你的社区了吗？',
       ctaDesc: 'Enlazo 为你带来全新的 Discord 社区体验。',
       invite: '添加 Enlazo ↗',
@@ -351,38 +345,42 @@
       adminCount: n => `${n} 个服务器具有管理员权限`,
       administrator: '管理员 · 设置功能需要 Enlazo API',
       noAdmins: '未找到具有管理员权限的服务器。',
-      noToken: '会话已连接，但 Discord 未提供查询服务器所需的临时令牌。请退出后重新登录。',
-      discordError: 'Discord 未授权此请求，请重新登录。',
+      noToken: '会话已连接，但缺少查询服务器所需的 Discord 令牌。请点击“重新连接 Discord”。',
+      discordError: 'Discord 拒绝了请求。你可能需要重新授权账户。',
+      unauthorized: 'Discord 访问已过期或无效。请重新授权账户。',
+      forbidden: 'Discord 不允许此请求。请检查已授权的权限。',
       unexpected: 'Discord 返回了意外的数据。',
-      loadError: '无法加载服务器。请退出后重试。',
+      loadError: '无法加载服务器。请重试。',
       loginError: '登录失败：',
-      configure: '请在 config.js 中配置 Supabase 以启用登录。',
+      configure: '请检查 config.js 中的 Supabase URL 和公开密钥。',
       signedOut: '已退出登录',
       logout: '退出登录',
+      reconnect: '重新连接 Discord ↗',
       theme: '切换主题',
       footer: '© Enlazo · Connect Through Play'
     }
   };
 
-  let lang = localStorage.getItem('enlazo_language') || 'es';
   if (!languages[lang]) lang = 'es';
 
-  let providerToken = null;
-  let currentSession = null;
+  const t = key => languages[lang][key] ?? languages.es[key] ?? key;
 
-  const t = key => {
-    const value = languages[lang][key];
-    return typeof value === 'function' ? value : value;
-  };
+  // ==========================================
+  // 3. MENSAJES Y TEMA
+  // ==========================================
 
   function toast(message) {
     const el = $('toast');
-    if (!el) return;
+    if (!el) {
+      console.info('[Enlazo]', message);
+      return;
+    }
 
     el.textContent = message;
     el.classList.add('show');
 
-    setTimeout(() => el.classList.remove('show'), 5500);
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove('show'), 5500);
   }
 
   function theme(mode) {
@@ -399,9 +397,9 @@
   theme(localStorage.getItem('enlazo_theme') || 'dark');
 
   if ($('theme')) {
-    $('theme').onclick = () => {
+    $('theme').addEventListener('click', () => {
       theme(document.body.classList.contains('light') ? 'dark' : 'light');
-    };
+    });
   }
 
   if ($('year')) {
@@ -410,20 +408,23 @@
 
   if ($('invite')) {
     $('invite').href =
-      `https://discord.com/oauth2/authorize?client_id=${
-        encodeURIComponent(cfg.botClientId || '1558587255726276730')
-      }&permissions=0&scope=bot%20applications.commands`;
+      `https://discord.com/oauth2/authorize?client_id=${encodeURIComponent(
+        cfg.botClientId || '1558587255726276730'
+      )}&permissions=0&scope=bot%20applications.commands`;
   }
 
-  // Añadir el selector de idioma sin modificar index.html.
+  // ==========================================
+  // 4. IDIOMA SIN SELECTORES DUPLICADOS
+  // ==========================================
+
   function createLanguageSelector() {
-    if ($('language')) return;
+    // Otras páginas ya tienen su propio #languageSelect.
+    if ($('language') || $('languageSelect')) return;
 
     const actions = document.querySelector('.nav-actions');
     if (!actions) return;
 
     const select = document.createElement('select');
-
     select.id = 'language';
     select.className = 'language-select';
     select.setAttribute('aria-label', 'Website language');
@@ -449,29 +450,37 @@
 
     select.value = lang;
 
-    select.addEventListener('change', () => {
-      lang = languages[select.value] ? select.value : 'es';
-      localStorage.setItem('enlazo_language', lang);
-      applyTranslations();
-
-      if (currentSession) {
-        load(currentSession);
-      }
-    });
-
+    select.addEventListener('change', () => changeLanguage(select.value));
     actions.insertBefore(select, actions.firstChild);
+  }
+
+  function changeLanguage(code) {
+    lang = languages[code] ? code : 'es';
+    localStorage.setItem('enlazo_language', lang);
+    applyTranslations();
+
+    if (currentSession) {
+      renderCurrentAccount();
+    }
+  }
+
+  // Conecta también el selector que ya existe en otras páginas.
+  if ($('languageSelect')) {
+    $('languageSelect').value = lang;
+    $('languageSelect').addEventListener('change', event => {
+      changeLanguage(event.target.value);
+    });
   }
 
   function put(selector, value) {
     const element = document.querySelector(selector);
-    if (element && value !== undefined) {
+    if (element && value !== undefined && value !== null) {
       element.innerHTML = value;
     }
   }
 
   function applyTranslations() {
     const d = languages[lang];
-
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
 
     const translations = {
@@ -479,7 +488,6 @@
       'header nav a[href="#dashboard"]': d.navDashboard,
       'header nav a[href="#commands"]': d.navCommands,
       '#loginTop': d.login,
-
       '.hero .eyebrow': d.eyebrow,
       '.hero h1': d.heroTitle,
       '.hero > p': d.heroDesc,
@@ -488,18 +496,15 @@
       '.hero-notice': d.notice,
       '.badge-a': d.badgePlay,
       '.badge-b': d.badgeCommunity,
-
       '#features .section-kicker': d.featureKicker,
       '#features h2': d.featureTitle,
       '#features .sub': d.featureDesc,
-
       '#features .cards article:nth-child(1) h3': d.gameTitle,
       '#features .cards article:nth-child(1) p': d.gameDesc,
       '#features .cards article:nth-child(2) h3': d.securityTitle,
       '#features .cards article:nth-child(2) p': d.securityDesc,
       '#features .cards article:nth-child(3) h3': d.customizeTitle,
       '#features .cards article:nth-child(3) p': d.customizeDesc,
-
       '#dashboard .section-kicker': d.dashboardKicker,
       '#dashboard h2': d.dashboardTitle,
       '#dashboard .sub': d.dashboardDesc,
@@ -507,15 +512,12 @@
       '#panelSubtitle': d.accountSubtitle,
       '#loginPanel': d.connect,
       '.panel-foot': d.securityNote,
-
       '#commands .section-kicker': d.commandsKicker,
       '#commands h2': d.commandsTitle,
       '#commands .sub': d.commandsDesc,
-
       '.cta h3': d.ctaTitle,
       '.cta p': d.ctaDesc,
       '#invite': d.invite,
-
       '.footer > span': d.footer,
       '.footer > div:last-child a[href="privacy.html"]': d.privacy,
       '.footer > div:last-child a[href="terms.html"]': d.terms
@@ -525,20 +527,18 @@
       put(selector, value);
     });
 
-    const chips = document.querySelectorAll('#commands .chips span');
-
-    d.chips.forEach((label, index) => {
-      if (chips[index]) chips[index].textContent = label;
+    document.querySelectorAll('#commands .chips span').forEach((chip, index) => {
+      if (d.chips[index]) chip.textContent = d.chips[index];
     });
 
     if ($('language')) $('language').value = lang;
+    if ($('languageSelect')) $('languageSelect').value = lang;
 
     if ($('theme')) {
       $('theme').setAttribute('aria-label', d.theme);
       $('theme').title = d.theme;
     }
 
-    // Mantener el contenido del dashboard en el idioma seleccionado.
     if (!currentSession) setLoggedOut();
   }
 
@@ -551,16 +551,35 @@
       "'": '&#39;'
     })[char]);
 
-  function setLoggedOut() {
+  // ==========================================
+  // 5. SESIÓN Y CIERRE DE SESIÓN
+  // ==========================================
+
+  function clearDiscordToken() {
     providerToken = null;
 
-    if ($('panelTitle')) {
-      $('panelTitle').textContent = t('accountTitle');
-    }
+    try {
+      sessionStorage.removeItem(TOKEN_KEY);
+    } catch (_) {}
+  }
 
-    if ($('panelSubtitle')) {
-      $('panelSubtitle').textContent = t('accountSubtitle');
-    }
+  function saveDiscordToken(token) {
+    if (!token) return;
+
+    providerToken = token;
+
+    try {
+      sessionStorage.setItem(TOKEN_KEY, token);
+    } catch (_) {}
+  }
+
+  function setLoggedOut() {
+    currentSession = null;
+    loadSequence++;
+    clearDiscordToken();
+
+    if ($('panelTitle')) $('panelTitle').textContent = t('accountTitle');
+    if ($('panelSubtitle')) $('panelSubtitle').textContent = t('accountSubtitle');
 
     if ($('loginPanel')) {
       $('loginPanel').textContent = t('connect');
@@ -575,7 +594,31 @@
           <p>${escapeHTML(t('emptyDesc'))}</p>
         </div>`;
     }
+
+    if ($('loginTop')) $('loginTop').onclick = login;
+    if ($('loginHero')) $('loginHero').onclick = login;
   }
+
+  async function logout() {
+    if (!client) {
+      setLoggedOut();
+      return;
+    }
+
+    const { error } = await client.auth.signOut();
+
+    if (error) {
+      toast(error.message || t('loadError'));
+      return;
+    }
+
+    setLoggedOut();
+    toast(t('signedOut'));
+  }
+
+  // ==========================================
+  // 6. INICIO DE SESIÓN CON DISCORD
+  // ==========================================
 
   async function login() {
     if (!client) {
@@ -583,16 +626,27 @@
       return;
     }
 
-    const { error } = await client.auth.signInWithOAuth({
-      provider: 'discord',
-      options: {
-        scopes: 'identify guilds',
-        redirectTo: location.origin + location.pathname
-      }
-    });
+    try {
+      const redirectTo = cfg.redirectUrl || (
+        location.origin + location.pathname
+      );
 
-    if (error) {
-      toast(t('loginError') + error.message);
+      const { error } = await client.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+          scopes: 'identify guilds',
+          redirectTo,
+          queryParams: {
+            prompt: 'consent'
+          }
+        }
+      });
+
+      if (error) {
+        toast(t('loginError') + error.message);
+      }
+    } catch (error) {
+      toast(t('loginError') + (error.message || 'Unknown error'));
     }
   }
 
@@ -600,35 +654,96 @@
     if ($(id)) $(id).onclick = login;
   });
 
-  async function load(session) {
-    currentSession = session || null;
+  // ==========================================
+  // 7. PERFIL DE SUPABASE
+  // ==========================================
 
+  async function saveProfile(session, discordUser) {
+    if (!client || !session?.user?.id || !discordUser) return;
+
+    const avatarUrl = discordUser.avatar
+      ? `https://cdn.discordapp.com/avatars/${encodeURIComponent(discordUser.id)}/${encodeURIComponent(discordUser.avatar)}.png?size=128`
+      : null;
+
+    const profile = {
+      id: session.user.id,
+      username: discordUser.global_name || discordUser.username || null,
+      avatar_url: avatarUrl,
+      updated_at: new Date().toISOString()
+    };
+
+    // Las políticas RLS deben permitir que cada usuario modifique
+    // únicamente la fila cuyo id coincide con auth.uid().
+    const { error } = await client
+      .from('profiles')
+      .upsert(profile, { onConflict: 'id' });
+
+    if (error) {
+      // El perfil no debe impedir que se muestren los servidores.
+      console.warn('[Enlazo] No se pudo guardar el perfil:', error.message);
+    }
+  }
+
+  // ==========================================
+  // 8. CARGAR PERFIL Y SERVIDORES DE DISCORD
+  // ==========================================
+
+  function showAccountMessage(message, reconnect = false) {
+    if ($('accountArea')) {
+      $('accountArea').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">◈</div>
+          <p class="muted">${escapeHTML(message)}</p>
+          ${reconnect ? `
+            <button type="button" id="reconnectDiscord" class="btn">
+              ${escapeHTML(t('reconnect'))}
+            </button>` : ''}
+        </div>`;
+    }
+
+    if (reconnect && $('reconnectDiscord')) {
+      $('reconnectDiscord').onclick = async () => {
+        clearDiscordToken();
+        await login();
+      };
+    }
+  }
+
+  async function discordRequest(endpoint, token) {
+    return fetch(`https://discord.com/api/v10${endpoint}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  async function load(session) {
     if (!session) {
       setLoggedOut();
       return;
     }
 
-    providerToken = session.provider_token || providerToken;
+    currentSession = session;
+    const sequence = ++loadSequence;
+
+    // El token entregado tras OAuth tiene prioridad.
+    if (session.provider_token) {
+      saveDiscordToken(session.provider_token);
+    }
 
     if ($('loginPanel')) {
       $('loginPanel').textContent = t('logout');
-
-      $('loginPanel').onclick = async () => {
-        if (client) await client.auth.signOut();
-
-        currentSession = null;
-        setLoggedOut();
-        toast(t('signedOut'));
-      };
+      $('loginPanel').onclick = logout;
     }
 
-    if ($('panelTitle')) {
-      $('panelTitle').textContent = t('connected');
+    if ($('loginTop')) {
+      $('loginTop').textContent = t('logout');
+      $('loginTop').onclick = logout;
     }
 
-    if ($('panelSubtitle')) {
-      $('panelSubtitle').textContent = t('loading');
-    }
+    if ($('panelTitle')) $('panelTitle').textContent = t('connected');
+    if ($('panelSubtitle')) $('panelSubtitle').textContent = t('loading');
 
     if ($('accountArea')) {
       $('accountArea').innerHTML =
@@ -636,58 +751,77 @@
     }
 
     if (!providerToken) {
-      if ($('accountArea')) {
-        $('accountArea').innerHTML =
-          `<p class="muted">${escapeHTML(t('noToken'))}</p>`;
-      }
+      if ($('panelSubtitle')) $('panelSubtitle').textContent = t('connected');
+      showAccountMessage(t('noToken'), true);
       return;
     }
 
     try {
-      const headers = {
-        Authorization: 'Bearer ' + providerToken
-      };
-
       const [userResponse, guildResponse] = await Promise.all([
-        fetch('https://discord.com/api/v10/users/@me', { headers }),
-        fetch('https://discord.com/api/v10/users/@me/guilds', { headers })
+        discordRequest('/users/@me', providerToken),
+        discordRequest('/users/@me/guilds', providerToken)
       ]);
 
+      // Ignorar respuestas antiguas si el usuario cambió de sesión.
+      if (sequence !== loadSequence) return;
+
+      if (userResponse.status === 401 || guildResponse.status === 401) {
+        clearDiscordToken();
+        if ($('panelSubtitle')) $('panelSubtitle').textContent = t('connected');
+        showAccountMessage(t('unauthorized'), true);
+        return;
+      }
+
+      if (userResponse.status === 403 || guildResponse.status === 403) {
+        if ($('panelSubtitle')) $('panelSubtitle').textContent = t('connected');
+        showAccountMessage(t('forbidden'), true);
+        return;
+      }
+
       if (!userResponse.ok || !guildResponse.ok) {
-        throw new Error(t('discordError'));
+        throw new Error(
+          `Discord API: perfil ${userResponse.status}, servidores ${guildResponse.status}`
+        );
       }
 
       const user = await userResponse.json();
       const guilds = await guildResponse.json();
 
-      if (!Array.isArray(guilds)) {
+      if (sequence !== loadSequence) return;
+
+      if (!Array.isArray(guilds) || !user.id || !user.username) {
         throw new Error(t('unexpected'));
       }
 
-      const admins = guilds.filter(server =>
-        server.owner ||
-        (BigInt(server.permissions || '0') & 8n) === 8n
-      );
+      await saveProfile(session, user);
+
+      const admins = guilds.filter(server => {
+        if (server.owner) return true;
+
+        try {
+          return (BigInt(server.permissions || '0') & 8n) === 8n;
+        } catch (_) {
+          return false;
+        }
+      });
 
       if ($('panelTitle')) {
-        $('panelTitle').textContent =
-          user.global_name || user.username;
+        $('panelTitle').textContent = user.global_name || user.username;
       }
 
       if ($('panelSubtitle')) {
-        $('panelSubtitle').textContent =
-          t('adminCount')(admins.length);
+        $('panelSubtitle').textContent = t('adminCount')(admins.length);
       }
 
       const avatar = user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+        ? `https://cdn.discordapp.com/avatars/${encodeURIComponent(user.id)}/${encodeURIComponent(user.avatar)}.png?size=128`
         : '';
 
-      const profile = `
+      const profileHTML = `
         <div class="profile">
           ${
             avatar
-              ? `<img class="avatar" src="${avatar}" alt="Avatar">`
+              ? `<img class="avatar" src="${avatar}" alt="Avatar" referrerpolicy="no-referrer">`
               : '<span class="guild-icon">◈</span>'
           }
           <div>
@@ -703,8 +837,9 @@
             ${admins.map(server => {
               const icon = server.icon
                 ? `<img class="guild-icon"
-                    src="https://cdn.discordapp.com/icons/${server.id}/${server.icon}.png?size=128"
-                    alt="">`
+                    src="https://cdn.discordapp.com/icons/${encodeURIComponent(server.id)}/${encodeURIComponent(server.icon)}.png?size=128"
+                    alt=""
+                    referrerpolicy="no-referrer">`
                 : '<span class="guild-icon">◈</span>';
 
               return `
@@ -720,43 +855,81 @@
         : `<p class="muted">${escapeHTML(t('noAdmins'))}</p>`;
 
       if ($('accountArea')) {
-        $('accountArea').innerHTML = profile + guildHTML;
+        $('accountArea').innerHTML = profileHTML + guildHTML;
       }
+
     } catch (error) {
-      if ($('panelSubtitle')) {
-        $('panelSubtitle').textContent = t('connected');
-      }
+      if (sequence !== loadSequence) return;
 
-      if ($('accountArea')) {
-        $('accountArea').innerHTML =
-          `<p class="muted">${escapeHTML(t('loadError'))}</p>`;
-      }
+      console.error('[Enlazo] Error al cargar Discord:', error);
 
-      toast(error.message || t('loadError'));
+      if ($('panelSubtitle')) $('panelSubtitle').textContent = t('connected');
+
+      showAccountMessage(t('loadError'), true);
+      toast(t('loadError'));
     }
   }
+
+  function renderCurrentAccount() {
+    if (currentSession) {
+      load(currentSession);
+    } else {
+      setLoggedOut();
+    }
+  }
+
+  // ==========================================
+  // 9. INICIALIZACIÓN
+  // ==========================================
 
   createLanguageSelector();
   applyTranslations();
 
-  if (client) {
+  if (!client) {
+    console.error(
+      '[Enlazo] Supabase no está configurado. Comprueba config.js y el orden de los scripts.'
+    );
+  } else {
+    // Supabase puede avisar de INITIAL_SESSION al cargar la página.
+    // Evitamos hacer una segunda carga innecesaria con getSession().
+    let receivedInitialSession = false;
+
     client.auth.onAuthStateChange((event, session) => {
-      if (session && session.provider_token) {
-        providerToken = session.provider_token;
+      if (event === 'INITIAL_SESSION') {
+        receivedInitialSession = true;
+        load(session);
+        return;
+      }
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        if (session?.provider_token) {
+          saveDiscordToken(session.provider_token);
+        }
+
+        load(session);
+        return;
       }
 
       if (event === 'SIGNED_OUT') {
-        currentSession = null;
         setLoggedOut();
-      } else if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-        load(session);
       }
     });
 
+    // Respaldo por si la sesión ya existe y aún no se ha recibido
+    // el evento inicial.
     client.auth.getSession()
-      .then(({ data }) => {
-        if (data.session) load(data.session);
+      .then(({ data, error }) => {
+        if (error) {
+          console.warn('[Enlazo] No se pudo recuperar la sesión:', error.message);
+          return;
+        }
+
+        if (!receivedInitialSession && data?.session) {
+          load(data.session);
+        }
       })
-      .catch(() => {});
+      .catch(error => {
+        console.warn('[Enlazo] Error al comprobar la sesión:', error);
+      });
   }
 })();
