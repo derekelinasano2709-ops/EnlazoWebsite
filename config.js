@@ -1,7 +1,8 @@
+
 // ENLAZO WEB — Configuración pública
 
 window.ENLAZO_CONFIG = {
-  supabaseUrl: "https://supabase.com/dashboard/project/jmbqidnybmqblxldiwoe",
+  supabaseUrl: "https://jmbqidnybmqblxldiwoe.supabase.co",
 
   supabaseAnonKey: "sb_publishable_NYzo_-8ndK30qj5Cw16l9A_WzDx99hP",
 
